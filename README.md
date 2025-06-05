@@ -1,6 +1,8 @@
-# 🦙 Local LoRA Trainer: Easy On-Device LLM Fine-Tuning & Inference Toolkit
+![SmoLoRA Logo](logo.png)
 
-A lightweight, developer-friendly Python tool for fine-tuning a LLaMA language model using LoRA adapters and running on-device inference. Built for flexibility and rapid prototyping, this tool allows you to train, save, load, and generate text from a language model—all in just a few Python files.
+# SmoLoRA: Edge Language Model Fine-Tuning & Inference Toolkit
+
+A lightweight, developer-friendly Python tool for fine-tuning a small language model using LoRA adapters and running on-device inference. Built for flexibility and rapid prototyping, this tool allows you to train, save, load, and generate text from a language model—all in just a few Python files.
 
 ---
 
