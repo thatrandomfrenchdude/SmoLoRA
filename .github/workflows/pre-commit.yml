@@ -19,6 +19,7 @@ jobs:
           source venv/bin/activate
           pip install pre-commit
           pip install -r requirements.txt
+          pip install -r dev-requirements.txt
       - name: Run Pre-commit
         run: |
           source venv/bin/activate
