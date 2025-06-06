@@ -67,13 +67,13 @@ def test_prepare_dataset_chunking(tmp_path):
     assert "five six" in texts
     assert len(texts) == 3
 
-# Test LoRATrainer with mocks
+# Test SmoLoRA with mocks
 def test_lora_trainer_init_and_inference():
-    with patch("LoRATrainer.AutoModelForCausalLM") as mock_model_cls, \
-         patch("LoRATrainer.AutoTokenizer") as mock_tokenizer_cls, \
-         patch("LoRATrainer.load_dataset") as mock_load_dataset, \
-         patch("LoRATrainer.SFTTrainer") as mock_trainer_cls:
-        from smoLoRA import LoRATrainer
+    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, \
+         patch("smoLoRA.AutoTokenizer") as mock_tokenizer_cls, \
+         patch("smoLoRA.load_dataset") as mock_load_dataset, \
+         patch("smoLoRA.SFTTrainer") as mock_trainer_cls:
+        from smoLoRA import SmoLoRA
         mock_model = MagicMock()
         mock_tokenizer = MagicMock()
         mock_trainer = MagicMock()
@@ -81,7 +81,7 @@ def test_lora_trainer_init_and_inference():
         mock_tokenizer_cls.from_pretrained.return_value = mock_tokenizer
         mock_load_dataset.return_value = [{"text": "sample"}]
         mock_trainer_cls.return_value = mock_trainer
-        trainer = LoRATrainer(
+        trainer = SmoLoRA(
             base_model_name="fake/model",
             dataset_name="fake_dataset",
             text_field="text",
@@ -99,14 +99,14 @@ def test_lora_trainer_init_and_inference():
         result = trainer.inference("prompt")
         assert result == "output text"
 
-# Test LoRATrainer.train and save with mocks
+# Test SmoLoRA.train and save with mocks
 def test_lora_trainer_train_and_save(tmp_path):
-    with patch("LoRATrainer.AutoModelForCausalLM") as mock_model_cls, \
-         patch("LoRATrainer.AutoTokenizer") as mock_tokenizer_cls, \
-         patch("LoRATrainer.load_dataset") as mock_load_dataset, \
-         patch("LoRATrainer.SFTTrainer") as mock_trainer_cls, \
-         patch("LoRATrainer.PeftModel") as mock_peft_model_cls:
-        from smoLoRA import LoRATrainer
+    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, \
+         patch("smoLoRA.AutoTokenizer") as mock_tokenizer_cls, \
+         patch("smoLoRA.load_dataset") as mock_load_dataset, \
+         patch("smoLoRA.SFTTrainer") as mock_trainer_cls, \
+         patch("smoLoRA.PeftModel") as mock_peft_model_cls:
+        from smoLoRA import SmoLoRA
         mock_model = MagicMock()
         mock_tokenizer = MagicMock()
         mock_trainer = MagicMock()
@@ -122,7 +122,7 @@ def test_lora_trainer_train_and_save(tmp_path):
         mock_trainer.model.save_pretrained = MagicMock()
         mock_merged_model.save_pretrained = MagicMock()
         mock_tokenizer.save_pretrained = MagicMock()
-        trainer = LoRATrainer(
+        trainer = SmoLoRA(
             base_model_name="fake/model",
             dataset_name="fake_dataset",
             text_field="text",
@@ -143,16 +143,16 @@ def test_lora_trainer_train_and_save(tmp_path):
         mock_merged_model.save_pretrained.assert_called()
         mock_tokenizer.save_pretrained.assert_called()
 
-# Test LoRATrainer.load_model with mocks
+# Test SmoLoRA.load_model with mocks
 def test_lora_trainer_load_model():
-    with patch("LoRATrainer.AutoModelForCausalLM") as mock_model_cls, \
-         patch("LoRATrainer.AutoTokenizer") as mock_tokenizer_cls:
-        from smoLoRA import LoRATrainer
+    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, \
+         patch("smoLoRA.AutoTokenizer") as mock_tokenizer_cls:
+        from smoLoRA import SmoLoRA
         mock_model = MagicMock()
         mock_tokenizer = MagicMock()
         mock_model_cls.from_pretrained.return_value = mock_model
         mock_tokenizer_cls.from_pretrained.return_value = mock_tokenizer
-        trainer = LoRATrainer(
+        trainer = SmoLoRA(
             base_model_name="fake/model",
             dataset_name="fake_dataset",
             text_field="text",

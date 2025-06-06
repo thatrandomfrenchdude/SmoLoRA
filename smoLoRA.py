@@ -6,7 +6,7 @@ from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
 from datetime import datetime
 
-class LoRATrainer:
+class SmoLoRA:
     def __init__(self,
                  base_model_name: str,
                  dataset_name: str,
