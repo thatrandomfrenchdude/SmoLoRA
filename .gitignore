@@ -1,6 +1,3 @@
-/lora-trainer-venv/**
-/new-mac-venv/**
-/smolora-venv/**
 /smolora-dev/**
 /output_model/**
 **/__pycache__/**
