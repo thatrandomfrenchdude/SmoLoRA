@@ -9,17 +9,18 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       - name: Install dependencies
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install pre-commit
-          pip install smolora
+          pip install --upgrade pip
+          pip install -e .
           pip install -r dev-requirements.txt
+          pip install pre-commit
       - name: Run Pre-commit
         run: |
           source venv/bin/activate
