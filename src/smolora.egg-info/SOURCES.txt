@@ -18,6 +18,10 @@ docs/development-guide.md
 docs/model-management.md
 docs/testing-strategy.md
 docs/training-pipeline.md
+examples/__init__.py
+examples/usage.py
+scripts/setup-dev.sh
+src/__init__.py
 src/smolora/__init__.py
 src/smolora/core.py
 src/smolora/dataset.py
@@ -26,4 +30,5 @@ src/smolora.egg-info/SOURCES.txt
 src/smolora.egg-info/dependency_links.txt
 src/smolora.egg-info/requires.txt
 src/smolora.egg-info/top_level.txt
+tests/__init__.py
 tests/test_smolora.py

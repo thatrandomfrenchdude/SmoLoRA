@@ -40,13 +40,13 @@ repos:
       - id: mypy
         additional_dependencies: [types-requests]
         args: [--ignore-missing-imports]
+        exclude: ^(tests/|examples/)
 
   - repo: local
     hooks:
       - id: pytest-check
         name: pytest-check
-        entry: pytest
-        args: [tests/test_smolora.py, -v]
+        entry: bash -c 'PYTHONPATH=src python -m pytest tests/ -v'
         language: system
         pass_filenames: false
         always_run: true

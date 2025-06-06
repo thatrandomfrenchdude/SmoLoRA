@@ -43,8 +43,6 @@ Dynamic: license-file
 
 A lightweight, developer-friendly Python package for fine-tuning small language models using LoRA adapters and running on-device inference. Built for flexibility and rapid prototyping, SmoLoRA allows you to train, save, load, and generate text from language models with a clean, modular architecture.
 
----
-
 ## Table of Contents
 - [📦 Features](#-features)
 - [🔧 Installation](#-installation)
@@ -56,8 +54,6 @@ A lightweight, developer-friendly Python package for fine-tuning small language 
 - [🧪 Testing](#-testing)
 - [📚 Documentation](#-documentation)
 
----
-
 ## 📦 Features
 
 - **Easy Installation**: Simple pip install with all dependencies managed
@@ -67,8 +63,6 @@ A lightweight, developer-friendly Python package for fine-tuning small language 
 - **Model Management**: Save, load, and merge adapters with base models
 - **Comprehensive Testing**: Full test suite with mocking for reliable development
 - **Developer Tools**: Pre-commit hooks, formatting, and linting included
-
----
 
 ## 🔧 Installation
 
@@ -89,8 +83,6 @@ chmod +x scripts/setup-dev.sh
 ```
 
 This will create a virtual environment, install all dependencies, and set up pre-commit hooks.
-
----
 
 ## 📁 Project Structure
 
@@ -114,7 +106,7 @@ smolora/
 ├── requirements.txt       # Production dependencies
 ├── dev-requirements.txt   # Development dependencies
 └── README.md             # This file
----
+```
 
 ## 🚀 Quick Start
 
@@ -168,8 +160,6 @@ trainer = SmoLoRA(
     output_dir="./custom_model"
 )
 ```
-
----
 
 ## 📂 Custom Dataset Handling
 
@@ -232,13 +222,9 @@ trainer.dataset = dataset
 # Proceed with training, merging, loading, and inference as shown above.
 ```
 
----
-
 ## 🛠️ General-Purpose Dataset Preparation
 
 You can use the `prepare_dataset.py` tool to convert your raw text, CSV, or JSONL data into a HuggingFace `Dataset` ready for fine-tuning.
-
----
 
 ## 🛠️ Advanced Usage
 
@@ -278,8 +264,6 @@ training_config.per_device_train_batch_size = 2
 training_config.learning_rate = 2e-4
 ```
 
----
-
 ## 🧠 Tips & Best Practices
 
 - **Start Small**: Begin with smaller models like Phi-1.5 for faster iteration
@@ -288,8 +272,6 @@ training_config.learning_rate = 2e-4
 - **Evaluation**: Monitor training loss and validate on held-out data
 - **Chunking**: Use appropriate chunk sizes for your specific use case
 - **Device Selection**: The toolkit automatically uses MPS on Apple Silicon Macs
-
----
 
 ## 🧪 Testing
 
@@ -313,8 +295,6 @@ The test suite includes:
 - Mock-based training pipeline tests
 - Integration tests with sample data
 
----
-
 ## 📚 Documentation
 
 Comprehensive documentation is available in the `docs/` directory:
@@ -323,8 +303,6 @@ Comprehensive documentation is available in the `docs/` directory:
 - **[Architecture](docs/architecture.md)**: System design and components
 - **[Dataset Handling](docs/dataset-handling.md)**: Data preparation guide
 - **[Development Guide](docs/development-guide.md)**: Contributing guidelines
-
----
 
 ## 🤝 Contributing
 
@@ -348,106 +326,6 @@ chmod +x scripts/setup-dev.sh
 
 This sets up pre-commit hooks, installs development dependencies, and configures the environment.
 
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- Built on top of HuggingFace Transformers, PEFT, and TRL
-- Inspired by the need for accessible fine-tuning tools
-- Thanks to the open-source ML community
-
-```python
-from LoRATrainer import LoRATrainer
-from local_text import load_text_data
-from datetime import datetime
-
-start = datetime.now()
-print("Welcome to SmoLoRA!")
-print("Initializing the trainer...")
-
-# Choose your base model
-base_model = "microsoft/Phi-1.5"
-# Alternate: base_model = "meta-llama/Llama-2-7b-hf"
-
-# Choose your dataset identifier
-dataset = "yelp_review_full"
-# Alternatively, use custom local text data:
-# dataset = load_text_data("./my_text_data")
-# Or use the general-purpose preparer:
-# from prepare_dataset import prepare_dataset
-# dataset = prepare_dataset("./my_texts_folder", chunk_size=128)
-
-# Define a prompt for inference
-prompt = "Write a review about a great coffee shop."
-
-print("Initializing the trainer...")
-trainer = LoRATrainer(
-    base_model_name=base_model,
-    dataset_name=dataset,
-    text_field="text",
-    output_dir="./output_model"
-)
-
-trainer_init_time = datetime.now()
-print(f"Trainer initialized in {trainer_init_time - start}")
-
-# Fine-tune the model.
-print("Starting model tuning...")
-trainer.train()
-trainer_tune_time = datetime.now()
-print(f"Model tuned in {trainer_tune_time - trainer_init_time}")
-
-# Merge the LoRA adapter with the base model and save.
-print("Merging the model and saving...")
-trainer.save()
-trainer_save_time = datetime.now()
-print(f"Merged and saved in {trainer_save_time - trainer_tune_time}")
-
-# Load the tuned (merged) model.
-print("Loading the tuned model...")
-model, tokenizer = trainer.load_model("./output_model/final_merged")
-load_model_time = datetime.now()
-print(f"Model loaded in {load_model_time - trainer_save_time}")
-
-# Run a single inference.
-print("Running inference...")
-result = trainer.inference(prompt)
-print("Generated output:", result)
-inference_time = datetime.now()
-print(f"Inference completed in {inference_time - load_model_time}")
-
-print("Bye now!")
-```
-
----
-
-## 🧠 Tips & Best Practices
-
-- For rapid prototyping, use a publicly available HuggingFace dataset such as `"yelp_review_full"`.
-- When working with your custom text files, use the provided `load_text_data` function or the general-purpose `prepare_dataset.py` tool to load and format your data.
-- After training, merging the adapter with the base model allows you to deploy a single, portable model.
-- Adjust training parameters within the code if you need deeper control over hyperparameters.
-- Use the timing logs in `usage.py` to evaluate performance during training and inference.
-
----
-
-## 📂 Files
-
-```
-slm-tuner/
-├── LoRATrainer.py          # Core tool implementation handling training & inference
-├── local_text.py           # Utility to load custom text files into a dataset
-├── prepare_dataset.py      # General-purpose dataset preparation tool (text, CSV, JSONL)
-├── usage.py                # Example script with timing logs for a full workflow
-└── README.md               # Project overview and usage instructions
-```
-
----
-
-Happy fine-tuning! 🦙💻✨
