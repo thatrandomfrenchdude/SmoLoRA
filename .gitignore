@@ -7,3 +7,4 @@
 /.mypy_cache/
 .DS_Store
 /htmlcov/
+.coverage
