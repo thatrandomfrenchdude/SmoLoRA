@@ -25,7 +25,9 @@ By participating in this project, you are expected to uphold our code of conduct
 4. Make your changes
 5. Add tests for your changes
 6. Run the test suite to ensure everything passes
-7. Submit a pull request
+7. Add relevant documentation for your changes
+8. Ensure your code adheres to the style guidelines
+9. Submit a pull request
 
 ## Development Setup
 
@@ -35,6 +37,19 @@ By participating in this project, you are expected to uphold our code of conduct
 - Virtual environment tool (venv, conda, etc.)
 
 ### Installation
+
+#### Automatic
+```bash
+# Clone the repository
+git clone https://github.com/thatrandomfrenchdude/SmoLoRA.git
+cd SmoLoRA
+
+# Run the setup script to create a virtual environment and install dependencies
+chmod +x setup-dev.sh
+./setup-dev.sh
+```
+
+#### Manual Setup
 
 1. Create and activate a virtual environment:
 ```bash
@@ -246,9 +261,9 @@ Brief description of changes
 - [ ] Test coverage maintained/improved
 
 ## Documentation
-- [ ] Code is self-documenting with type hints and docstrings
+- [ ] Code is documented with type hints and docstrings
 - [ ] README updated if needed
-- [ ] API documentation updated if needed
+- [ ] Comprehensive documentation updated if needed
 ```
 
 ### Review Process
