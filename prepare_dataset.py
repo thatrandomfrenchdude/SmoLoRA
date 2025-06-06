@@ -1,10 +1,21 @@
-import os
-import json
+"""Prepare TXT, JSONL, and CSV datasets for use with SmoLoRA."""
+
 import csv
+import json
+import os
+from typing import List, Optional
+
 from datasets import Dataset
-from typing import List, Optional, Union
+
 
 def read_txt_folder(folder_path: str) -> List[str]:
+    """Read all .txt files in a folder and return a list of lines.
+
+    Args:
+        folder_path: Path to the folder containing .txt files.
+    Returns:
+        List of strings, each string is a line from the .txt files.
+    """
     texts = []
     for fname in os.listdir(folder_path):
         if fname.endswith(".txt"):
@@ -15,7 +26,16 @@ def read_txt_folder(folder_path: str) -> List[str]:
                         texts.append(line)
     return texts
 
+
 def read_jsonl(file_path: str, text_field: str = "text") -> List[str]:
+    """Read a .jsonl file and extract the specified text field.
+
+    Args:
+        file_path: Path to the .jsonl file.
+        text_field: Field name for text in .jsonl (default: "text").
+    Returns:
+        List of strings, each string is the text from the specified field.
+    """
     texts = []
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -24,7 +44,16 @@ def read_jsonl(file_path: str, text_field: str = "text") -> List[str]:
                 texts.append(obj[text_field].strip())
     return texts
 
+
 def read_csv(file_path: str, text_field: str = "text") -> List[str]:
+    """Read a .csv file and extract the specified text field.
+
+    Args:
+        file_path: Path to the .csv file.
+        text_field: Field name for text in .csv (default: "text").
+    Returns:
+        List of strings, each string is the text from the specified field.
+    """
     texts = []
     with open(file_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -33,26 +62,37 @@ def read_csv(file_path: str, text_field: str = "text") -> List[str]:
                 texts.append(row[text_field].strip())
     return texts
 
+
 def chunk_texts(texts: List[str], chunk_size: int = 0) -> List[str]:
+    """Split texts into chunks of a specified number of words.
+
+    Args:
+        texts: List of strings to be chunked.
+        chunk_size: Number of words per chunk (default: 0 = no chunking).
+    Returns:
+        List of strings, each string is a chunk of the original text.
+    """
     if chunk_size <= 0:
         return texts
     chunks = []
     for text in texts:
         words = text.split()
         for i in range(0, len(words), chunk_size):
-            chunk = " ".join(words[i:i+chunk_size])
+            chunk = " ".join(words[i : i + chunk_size])
             if chunk:
                 chunks.append(chunk)
     return chunks
+
 
 def prepare_dataset(
     source: str,
     text_field: str = "text",
     chunk_size: int = 0,
-    file_type: Optional[str] = None
+    file_type: Optional[str] = None,
 ) -> Dataset:
     """
     General-purpose dataset preparer.
+
     Args:
         source: Path to a folder of .txt files, or a .jsonl/.csv file.
         text_field: Field name for text in .jsonl/.csv (default: "text").
@@ -87,25 +127,44 @@ def prepare_dataset(
     texts = [t for t in texts if t]
     texts = list(dict.fromkeys(texts))
 
-    data = [{ "text": t } for t in texts]
+    data = [{"text": t} for t in texts]
     return Dataset.from_list(data)
+
 
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Prepare a text dataset for fine-tuning.")
+    parser = argparse.ArgumentParser(
+        description="Prepare a text dataset for fine-tuning."
+    )
     parser.add_argument("source", help="Path to .txt folder, .jsonl, or .csv file")
-    parser.add_argument("--text_field", default="text", help="Text field name for .jsonl/.csv (default: text)")
-    parser.add_argument("--chunk_size", type=int, default=0, help="Chunk size in words (default: 0 = no chunking)")
-    parser.add_argument("--file_type", choices=["txt", "jsonl", "csv"], default=None, help="Force file type")
-    parser.add_argument("--save_path", default=None, help="Optional: path to save as .jsonl")
+    parser.add_argument(
+        "--text_field",
+        default="text",
+        help="Text field name for .jsonl/.csv (default: text)",
+    )
+    parser.add_argument(
+        "--chunk_size",
+        type=int,
+        default=0,
+        help="Chunk size in words (default: 0 = no chunking)",
+    )
+    parser.add_argument(
+        "--file_type",
+        choices=["txt", "jsonl", "csv"],
+        default=None,
+        help="Force file type",
+    )
+    parser.add_argument(
+        "--save_path", default=None, help="Optional: path to save as .jsonl"
+    )
 
     args = parser.parse_args()
     dataset = prepare_dataset(
         source=args.source,
         text_field=args.text_field,
         chunk_size=args.chunk_size,
-        file_type=args.file_type
+        file_type=args.file_type,
     )
     print(f"Loaded {len(dataset)} samples.")
 

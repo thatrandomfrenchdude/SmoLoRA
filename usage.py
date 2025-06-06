@@ -1,6 +1,9 @@
-from smoLoRA import SmoLoRA
-from local_text import load_text_data
+"""Contains sample usage for SmoLoRA."""
+
 from datetime import datetime
+
+# from local_text import load_text_data
+from smoLoRA import SmoLoRA
 
 # Optionally import the general-purpose preparer
 # from prepare_dataset import prepare_dataset
@@ -11,21 +14,21 @@ print("Initializing the trainer...")
 
 # base model to train
 base_model = "microsoft/Phi-1.5"
-### try a different base model ###
+# # or try a different base model
 # base_model = "meta-llama/Llama-2-7b-hf"
 
 # dataset to tune the model
 dataset = "yelp_review_full"
-### or try a custom dataset ###
+# # or try a custom dataset
 # dataset = load_text_data("./my_text_data")
-### or use the general-purpose preparer ###
+# # or use the general-purpose preparer
 # dataset = prepare_dataset("./my_texts_folder", chunk_size=128)
 # dataset = prepare_dataset("./data.csv", text_field="content")
 # dataset = prepare_dataset("./data.jsonl", text_field="message", chunk_size=256)
 
 # test prompt
 prompt = "Write a review about a great coffee shop."
-### try choosing your own prompt ###
+# # try choosing your own prompt
 # prompt = "Your custom prompt here."
 
 # initialize the trainer
@@ -34,13 +37,13 @@ trainer = SmoLoRA(
     base_model_name=base_model,
     dataset_name=dataset,
     text_field="text",
-    output_dir="./output_model"
+    output_dir="./output_model",
 )
 
-### for custom in-memory datasets, set trainer.dataset directly ###
+# # for custom in-memory datasets, set trainer.dataset directly
 # trainer.dataset = dataset
 
-### try modifying some training arguments for deeper control ###
+# # try modifying some training arguments for deeper control
 # trainer_tool.training_args.learning_rate = 1e-4
 # trainer_tool.training_args.num_train_epochs = 3
 # trainer_tool.training_args.per_device_train_batch_size = 2
@@ -69,13 +72,13 @@ print(f"Model loaded in {load_model_time - trainer_save_time}s")
 # run a single inference on the model
 print("Running inference...")
 result = trainer.inference(prompt)
-### or or try some different settings ###
+# # or or try some different settings
 # result = trainer.inference(prompt, max_new_tokens=150, do_sample=True, temperature=0.8)
 print("Generated output:", result)
 inference_time = datetime.now()
 print(f"Inference completed in {inference_time - load_model_time}s")
 
-### or try running multiple inferences ###
+# # or try running multiple inferences
 # print("Running multiple inferences...")
 # prompts = [
 #     "Write a glowing review about a spa experience.",
