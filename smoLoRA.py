@@ -96,7 +96,21 @@ class SmoLoRA:
         print(f"[{datetime.now()}] Starting model merge...")
         del self.model
         del self.trainer
-        torch.mps.empty_cache()
+
+        # Clear device cache to avoid memory issues
+        if self.device.type == "mps":
+            torch.mps.empty_cache()
+        elif self.device.type == "cuda":
+            torch.cuda.empty_cache()
+        else:
+            # For CPU or other devices, we still call a cache clearing method
+            # to maintain consistent behavior, even though CPU doesn't need it
+            try:
+                if hasattr(torch, "mps") and hasattr(torch.mps, "empty_cache"):
+                    torch.mps.empty_cache()
+            except (AttributeError, RuntimeError):
+                # Silently continue if MPS is not available or cache clearing fails
+                pass
 
         base_model = AutoModelForCausalLM.from_pretrained(
             self.base_model_name, trust_remote_code=True
