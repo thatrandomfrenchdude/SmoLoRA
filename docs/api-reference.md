@@ -12,14 +12,14 @@ The main class for fine-tuning language models using LoRA (Low-Rank Adaptation) 
 class SmoLoRA:
     def __init__(self,
                  base_model_name: str,
-                 dataset_name: str,
+                 dataset_name: Union[str, Dataset],
                  text_field: str = "text",
                  output_dir: str = "./fine_tuned_model"):
 ```
 
 **Parameters:**
 - `base_model_name` (str): HuggingFace model identifier (e.g., "microsoft/Phi-1.5", "meta-llama/Llama-2-7b-hf")
-- `dataset_name` (str): HuggingFace dataset identifier or custom dataset name
+- `dataset_name` (Union[str, Dataset]): HuggingFace dataset identifier or Dataset object
 - `text_field` (str, optional): Field name containing text data in the dataset. Defaults to "text"
 - `output_dir` (str, optional): Directory for saving checkpoints and final model. Defaults to "./fine_tuned_model"
 
@@ -29,7 +29,7 @@ class SmoLoRA:
 
 **Example:**
 ```python
-from smoLoRA import SmoLoRA
+from smolora import SmoLoRA
 
 # Basic usage
 trainer = SmoLoRA(
@@ -203,7 +203,7 @@ sft_config = SFTConfig(
 
 ### prepare_dataset()
 
-General-purpose dataset preparation utility in `prepare_dataset.py`.
+General-purpose dataset preparation utility in `dataset.py`.
 
 ```python
 def prepare_dataset(
@@ -228,7 +228,7 @@ def prepare_dataset(
 
 **Examples:**
 ```python
-from prepare_dataset import prepare_dataset
+from smolora import prepare_dataset
 
 # From folder of text files
 dataset = prepare_dataset("./my_texts/")
@@ -245,7 +245,7 @@ dataset = prepare_dataset("./data", file_type="txt")
 
 ### load_text_data()
 
-Simple text file loader in `local_text.py`.
+Simple text file loader for datasets.
 
 ```python
 def load_text_data(data_folder: str) -> Dataset:
@@ -259,7 +259,7 @@ def load_text_data(data_folder: str) -> Dataset:
 
 **Example:**
 ```python
-from local_text import load_text_data
+from smolora import load_text_data
 
 dataset = load_text_data("./my_text_files/")
 ```
@@ -268,7 +268,7 @@ dataset = load_text_data("./my_text_files/")
 
 ### Dataset Processing Functions
 
-Located in `prepare_dataset.py`:
+Located in `smolora.dataset`:
 
 #### read_txt_folder()
 ```python
@@ -299,7 +299,7 @@ Splits texts into smaller chunks of specified word count.
 ### Basic Training Workflow
 
 ```python
-from smoLoRA import SmoLoRA
+from smolora import SmoLoRA
 
 # 1. Initialize
 trainer = SmoLoRA(
@@ -323,16 +323,16 @@ result = trainer.inference("Write a review about a great restaurant.")
 ### Custom Dataset Workflow
 
 ```python
-from smoLoRA import SmoLoRA
-from prepare_dataset import prepare_dataset
+from smolora import SmoLoRA
+from smolora import prepare_dataset
 
 # 1. Prepare custom dataset
 dataset = prepare_dataset("./my_data.jsonl", text_field="message")
 
-# 2. Initialize trainer
+# 2. Initialize trainer with any dataset (will be replaced)
 trainer = SmoLoRA(
     base_model_name="microsoft/Phi-1.5",
-    dataset_name="dummy"  # Will be replaced
+    dataset_name="yelp_review_full"  # This will be replaced
 )
 
 # 3. Override dataset

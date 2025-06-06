@@ -2,7 +2,7 @@
 
 This document provides detailed explanations of SmoLoRA's main classes, modules, and their internal workings.
 
-## SmoLoRA Class (`smoLoRA.py`)
+## SmoLoRA Class (`smolora/core.py`)
 
 The central class that orchestrates the entire fine-tuning workflow.
 
@@ -366,12 +366,16 @@ if file_type is None:
 texts = list(dict.fromkeys(texts))  # Preserves order while removing duplicates
 ```
 
-## Local Text Module (`local_text.py`)
+## Dataset Module (`smolora/dataset.py`)
+
+Contains all dataset handling utilities including text loading and preprocessing functions.
+
+### load_text_data()
 
 Simplified text loading for basic use cases.
 
 ```python
-def load_text_data(data_folder):
+def load_text_data(data_folder: str) -> Dataset:
     texts = []
     for file_name in os.listdir(data_folder):
         if file_name.endswith(".txt"):
