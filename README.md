@@ -13,6 +13,7 @@ A lightweight, developer-friendly Python tool for fine-tuning a small language m
 [🚀 Class Structure Overview](#-class-structure-overview)  
 [🚀 Quickstart Walkthrough](#-quickstart-walkthrough)  
 [📂 Custom Dataset with Local Text Files](#-custom-dataset-with-local-text-files)  
+[🛠️ General-Purpose Dataset Preparation](#-general-purpose-dataset-preparation)  
 [🚀 Usage Example](#-usage-example)  
 [🧠 Tips & Best Practices](#-tips--best-practices)  
 [📂 Files](#-files)
@@ -23,6 +24,7 @@ A lightweight, developer-friendly Python tool for fine-tuning a small language m
 
 - Fine-tune LLaMA models using PEFT LoRA adapters
 - Use HuggingFace datasets or load your own custom text files
+- Prepare your own text, CSV, or JSONL data for fine-tuning with a general-purpose dataset preparer
 - Merge LoRA adapters into the base model for streamlined inference
 - Save and reload fine-tuned models locally
 - Clean and minimal class-based architecture for rapid prototyping
@@ -147,6 +149,57 @@ trainer.dataset = dataset
 
 ---
 
+## 🛠️ General-Purpose Dataset Preparation
+
+You can use the `prepare_dataset.py` tool to convert your raw text, CSV, or JSONL data into a HuggingFace `Dataset` ready for fine-tuning.
+
+### Prepare a dataset from text, CSV, or JSONL
+
+**Command line usage:**
+```bash
+python prepare_dataset.py ./my_texts_folder --chunk_size 128 --save_path my_dataset.jsonl
+python prepare_dataset.py ./data.csv --text_field content --save_path my_dataset.jsonl
+python prepare_dataset.py ./data.jsonl --text_field message --chunk_size 256 --save_path my_dataset.jsonl
+```
+
+- `--chunk_size` (optional): Split long texts into chunks of N words.
+- `--text_field` (optional): Specify the field name for CSV/JSONL files (default: `"text"`).
+- `--save_path` (optional): Save the processed dataset as a `.jsonl` file.
+
+**Python usage:**
+```python
+from prepare_dataset import prepare_dataset
+
+# From a folder of .txt files
+dataset = prepare_dataset("./my_texts_folder", chunk_size=128)
+
+# From a CSV file
+dataset = prepare_dataset("./data.csv", text_field="content")
+
+# From a JSONL file
+dataset = prepare_dataset("./data.jsonl", text_field="message", chunk_size=256)
+
+# Use the resulting dataset for fine-tuning:
+from LoRATrainer import LoRATrainer
+trainer = LoRATrainer(
+    base_model_name="meta-llama/Llama-2-7b-hf",
+    dataset_name="yelp_review_full",  # placeholder
+    text_field="text",
+    output_dir="./output_model"
+)
+trainer.dataset = dataset
+```
+
+**What does the prepared dataset look like?**
+
+Each entry is a dictionary with a `"text"` field:
+```python
+{'text': 'This is a single training example.'}
+```
+The dataset is a HuggingFace `Dataset` object, ready for use with the trainer.
+
+---
+
 ## 🚀 Usage Example
 
 The `usage.py` file provides a streamlined example which includes timing logs for each stage:
@@ -168,6 +221,9 @@ base_model = "microsoft/Phi-1.5"
 dataset = "yelp_review_full"
 # Alternatively, use custom local text data:
 # dataset = load_text_data("./my_text_data")
+# Or use the general-purpose preparer:
+# from prepare_dataset import prepare_dataset
+# dataset = prepare_dataset("./my_texts_folder", chunk_size=128)
 
 # Define a prompt for inference
 prompt = "Write a review about a great coffee shop."
@@ -216,7 +272,7 @@ print("Bye now!")
 ## 🧠 Tips & Best Practices
 
 - For rapid prototyping, use a publicly available HuggingFace dataset such as `"yelp_review_full"`.
-- When working with your custom text files, use the provided `load_text_data` function to load and format your data.
+- When working with your custom text files, use the provided `load_text_data` function or the general-purpose `prepare_dataset.py` tool to load and format your data.
 - After training, merging the adapter with the base model allows you to deploy a single, portable model.
 - Adjust training parameters within the code if you need deeper control over hyperparameters.
 - Use the timing logs in `usage.py` to evaluate performance during training and inference.
@@ -229,6 +285,7 @@ print("Bye now!")
 slm-tuner/
 ├── LoRATrainer.py          # Core tool implementation handling training & inference
 ├── local_text.py           # Utility to load custom text files into a dataset
+├── prepare_dataset.py      # General-purpose dataset preparation tool (text, CSV, JSONL)
 ├── usage.py                # Example script with timing logs for a full workflow
 └── README.md               # Project overview and usage instructions
 ```

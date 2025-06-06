@@ -1,6 +1,9 @@
 from LoRATrainer import LoRATrainer
 from local_text import load_text_data
-from datetime.datetime import datetime
+from datetime import datetime
+
+# Optionally import the general-purpose preparer
+# from prepare_dataset import prepare_dataset
 
 start = datetime.now()
 print("Welcome to SmoLoRA!")
@@ -15,6 +18,10 @@ base_model = "microsoft/Phi-1.5"
 dataset = "yelp_review_full"
 ### or try a custom dataset ###
 # dataset = load_text_data("./my_text_data")
+### or use the general-purpose preparer ###
+# dataset = prepare_dataset("./my_texts_folder", chunk_size=128)
+# dataset = prepare_dataset("./data.csv", text_field="content")
+# dataset = prepare_dataset("./data.jsonl", text_field="message", chunk_size=256)
 
 # test prompt
 prompt = "Write a review about a great coffee shop."
@@ -29,6 +36,9 @@ trainer = LoRATrainer(
     text_field="text",
     output_dir="./output_model"
 )
+
+### for custom in-memory datasets, set trainer.dataset directly ###
+# trainer.dataset = dataset
 
 ### try modifying some training arguments for deeper control ###
 # trainer_tool.training_args.learning_rate = 1e-4
