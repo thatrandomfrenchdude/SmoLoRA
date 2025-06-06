@@ -1,0 +1,7 @@
+echo "Development commands:"
+echo "- Format code: black ."
+echo "- Sort imports: isort ."
+echo "- Lint code: flake8 ."
+echo "- Type check: mypy src/"
+echo "- Run tests: pytest tests/ -v"
+echo "- Run pre-commit: pre-commit run --all-files"
