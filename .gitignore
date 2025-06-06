@@ -1,4 +1,6 @@
 /lora-trainer-venv/**
 /new-mac-venv/**
+/smolora-venv/**
 /output_model/**
 **/__pycache__/**
+/pytest_cache/**
