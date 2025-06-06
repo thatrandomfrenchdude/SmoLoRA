@@ -1,3 +1,42 @@
+Metadata-Version: 2.4
+Name: smolora
+Version: 0.1.0
+Summary: A lightweight, developer-friendly Python tool for fine-tuning small language models using LoRA adapters.
+Author: SmoLoRA Contributors
+License: MIT
+Project-URL: Homepage, https://github.com/username/smolora
+Project-URL: Bug Reports, https://github.com/username/smolora/issues
+Project-URL: Source, https://github.com/username/smolora
+Keywords: machine-learning,deep-learning,transformers,lora,fine-tuning
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: torch>=2.0.0
+Requires-Dist: transformers>=4.20.0
+Requires-Dist: datasets>=2.0.0
+Requires-Dist: peft>=0.4.0
+Requires-Dist: trl>=0.7.0
+Requires-Dist: accelerate>=0.20.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: flake8>=6.0.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+Requires-Dist: pre-commit>=3.0.0; extra == "dev"
+Dynamic: license-file
+
 ![SmoLoRA Logo](logo.png)
 
 # SmoLoRA: Edge Language Model Fine-Tuning & Inference Toolkit

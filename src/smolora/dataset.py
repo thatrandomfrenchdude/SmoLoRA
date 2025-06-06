@@ -1,4 +1,4 @@
-"""Prepare TXT, JSONL, and CSV datasets for use with SmoLoRA."""
+"""Dataset handling utilities for SmoLoRA."""
 
 import csv
 import json
@@ -6,6 +6,28 @@ import os
 from typing import List, Optional
 
 from datasets import Dataset
+
+
+def load_text_data(data_folder: str) -> Dataset:
+    """Load text data from a folder containing .txt files into a Hugging Face Dataset.
+
+    Args:
+        data_folder: Path to folder containing .txt files
+
+    Returns:
+        Dataset with text entries
+    """
+    texts = []
+    for file_name in os.listdir(data_folder):
+        if file_name.endswith(".txt"):
+            with open(os.path.join(data_folder, file_name), "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                for line in lines:
+                    clean_line = line.strip()
+                    if clean_line:
+                        texts.append({"text": clean_line})
+    dataset = Dataset.from_list(texts)
+    return dataset
 
 
 def read_txt_folder(folder_path: str) -> List[str]:
@@ -90,14 +112,14 @@ def prepare_dataset(
     chunk_size: int = 0,
     file_type: Optional[str] = None,
 ) -> Dataset:
-    """
-    General-purpose dataset preparer.
+    """General-purpose dataset preparer.
 
     Args:
         source: Path to a folder of .txt files, or a .jsonl/.csv file.
         text_field: Field name for text in .jsonl/.csv (default: "text").
         chunk_size: If >0, splits texts into chunks of this many words.
         file_type: Force file type: "txt", "jsonl", or "csv". If None, inferred.
+
     Returns:
         HuggingFace Dataset with a single "text" column.
     """
@@ -129,45 +151,3 @@ def prepare_dataset(
 
     data = [{"text": t} for t in texts]
     return Dataset.from_list(data)
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Prepare a text dataset for fine-tuning."
-    )
-    parser.add_argument("source", help="Path to .txt folder, .jsonl, or .csv file")
-    parser.add_argument(
-        "--text_field",
-        default="text",
-        help="Text field name for .jsonl/.csv (default: text)",
-    )
-    parser.add_argument(
-        "--chunk_size",
-        type=int,
-        default=0,
-        help="Chunk size in words (default: 0 = no chunking)",
-    )
-    parser.add_argument(
-        "--file_type",
-        choices=["txt", "jsonl", "csv"],
-        default=None,
-        help="Force file type",
-    )
-    parser.add_argument(
-        "--save_path", default=None, help="Optional: path to save as .jsonl"
-    )
-
-    args = parser.parse_args()
-    dataset = prepare_dataset(
-        source=args.source,
-        text_field=args.text_field,
-        chunk_size=args.chunk_size,
-        file_type=args.file_type,
-    )
-    print(f"Loaded {len(dataset)} samples.")
-
-    if args.save_path:
-        dataset.to_json(args.save_path)
-        print(f"Saved dataset to {args.save_path}")

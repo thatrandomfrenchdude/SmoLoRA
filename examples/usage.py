@@ -2,11 +2,9 @@
 
 from datetime import datetime
 
-# from local_text import load_text_data
-from smoLoRA import SmoLoRA
+from smolora import SmoLoRA
 
-# Optionally import the general-purpose preparer
-# from prepare_dataset import prepare_dataset
+# from smolora.dataset import load_text_data
 
 start = datetime.now()
 print("Welcome to SmoLoRA!")

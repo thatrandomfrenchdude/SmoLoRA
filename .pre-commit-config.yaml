@@ -46,7 +46,7 @@ repos:
       - id: pytest-check
         name: pytest-check
         entry: pytest
-        args: [test_smolora.py, -v]
+        args: [tests/test_smolora.py, -v]
         language: system
         pass_filenames: false
         always_run: true
