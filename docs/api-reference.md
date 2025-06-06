@@ -118,10 +118,10 @@ model, tokenizer = trainer.load_model("./models/my_fine_tuned_model/final_merged
 Generates text using the fine-tuned model.
 
 ```python
-def inference(self, 
-              prompt: str, 
-              max_new_tokens: int = 200, 
-              do_sample: bool = True, 
+def inference(self,
+              prompt: str,
+              max_new_tokens: int = 200,
+              do_sample: bool = True,
               temperature: float = 1.0) -> str:
 ```
 
@@ -360,8 +360,8 @@ prompts = [
 results = {}
 for prompt in prompts:
     result = trainer.inference(
-        prompt, 
-        max_new_tokens=100, 
+        prompt,
+        max_new_tokens=100,
         temperature=0.7
     )
     results[prompt] = result

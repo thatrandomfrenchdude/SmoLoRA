@@ -65,7 +65,7 @@ graph TD
     E --> F[Create SFT Trainer]
     F --> G[Execute Training]
     G --> H[Save LoRA Adapter]
-    
+
     H --> I[Merge Workflow]
     I --> J[Load Fresh Base Model]
     J --> K[Apply LoRA Adapter]
@@ -81,16 +81,16 @@ graph LR
     B -->|.txt| C[read_txt_folder]
     B -->|.jsonl| D[read_jsonl]
     B -->|.csv| E[read_csv]
-    
+
     C --> F[Text List]
     D --> F
     E --> F
-    
+
     F --> G{Chunking?}
     G -->|Yes| H[chunk_texts]
     G -->|No| I[Create Dataset]
     H --> I
-    
+
     I --> J[HuggingFace Dataset]
     J --> K[Apply Text Field Mapping]
     K --> L[Final Dataset]

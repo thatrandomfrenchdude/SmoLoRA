@@ -16,11 +16,11 @@ graph TD
     D --> E[Save Adapter Checkpoint]
     E --> F[Merge Adapters]
     F --> G[Final Model]
-    
+
     H[Training Data] --> I[Tokenization]
     I --> J[Batching]
     J --> D
-    
+
     K[LoRA Config] --> B
     L[Training Config] --> D
 ```
@@ -140,14 +140,14 @@ def print_trainable_parameters(model):
         all_param += param.numel()
         if param.requires_grad:
             trainable_params += param.numel()
-    
+
     print(f"Trainable params: {trainable_params:,}")
     print(f"All params: {all_param:,}")
     print(f"Trainable %: {100 * trainable_params / all_param:.2f}")
 
 # Typical output for 1.3B parameter model with LoRA:
 # Trainable params: 2,097,152
-# All params: 1,300,000,000  
+# All params: 1,300,000,000
 # Trainable %: 0.16
 ```
 
@@ -301,7 +301,7 @@ merged_model = model_with_adapter.merge_and_unload()
    adapter_A = adapter.lora_A.weight
    adapter_B = adapter.lora_B.weight
    adapter_scale = adapter.scaling
-   
+
    # Merge: W' = W + scale * B @ A
    merged_weight = original_weight + adapter_scale * (adapter_B @ adapter_A)
    module.weight.data = merged_weight
@@ -369,14 +369,14 @@ target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj"
 def training_diagnostics(trainer):
     """Monitor training health."""
     logs = trainer.state.log_history
-    
+
     # Check for loss convergence
     recent_losses = [log['train_loss'] for log in logs[-10:] if 'train_loss' in log]
     if len(recent_losses) > 5:
         loss_trend = recent_losses[-1] - recent_losses[0]
         if loss_trend > 0:
             print("Warning: Loss increasing recently")
-    
+
     # Check learning rate
     current_lr = trainer.get_last_lr()[0]
     if current_lr < 1e-6:
@@ -389,11 +389,11 @@ def memory_usage():
     """Monitor memory usage during training."""
     import psutil
     import torch
-    
+
     # System memory
     system_mem = psutil.virtual_memory()
     print(f"System RAM: {system_mem.percent:.1f}% used")
-    
+
     # GPU memory (if available)
     if torch.cuda.is_available():
         gpu_mem = torch.cuda.memory_allocated() / 1024**3
@@ -489,10 +489,10 @@ def curriculum_learning(dataset, difficulty_fn):
     """Sort dataset by difficulty for curriculum learning."""
     # Add difficulty scores
     dataset = dataset.map(lambda x: {**x, 'difficulty': difficulty_fn(x['text'])})
-    
+
     # Sort by difficulty
     dataset = dataset.sort('difficulty')
-    
+
     # Remove difficulty column
     dataset = dataset.remove_columns(['difficulty'])
     return dataset
@@ -511,17 +511,17 @@ sorted_dataset = curriculum_learning(dataset, text_difficulty)
 def dynamic_rank_training():
     """Train with increasing rank over time."""
     ranks = [4, 8, 16]
-    
+
     for rank in ranks:
         print(f"Training with rank {rank}")
-        
+
         # Update config
         trainer.peft_config.r = rank
         trainer.peft_config.lora_alpha = rank * 2
-        
+
         # Train for portion of total steps
         trainer.train(max_steps=500 // len(ranks))
-        
+
         # Save intermediate checkpoint
         trainer.model.save_pretrained(f"checkpoint_r{rank}")
 ```

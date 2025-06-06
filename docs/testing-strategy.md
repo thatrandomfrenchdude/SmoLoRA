@@ -34,7 +34,7 @@ def test_model_initialization(mock_tokenizer_cls, mock_model_cls):
     mock_model.config = MagicMock()
     mock_model.config.use_cache = False
     mock_model_cls.from_pretrained.return_value = mock_model
-    
+
     # Mock tokenizer with required methods
     mock_tokenizer = MagicMock()
     mock_tokenizer.pad_token_id = None
@@ -53,7 +53,7 @@ def test_dataset_loading(mock_load_dataset):
     mock_mapped_dataset = MagicMock()
     mock_dataset.map.return_value = mock_mapped_dataset
     mock_load_dataset.return_value = mock_dataset
-    
+
     # Test dataset transformation
     trainer = SmoLoRA(...)
     mock_dataset.map.assert_called_once()
@@ -70,7 +70,7 @@ def test_training_workflow(mock_trainer_cls):
     mock_trainer_model.save_pretrained = MagicMock()
     mock_trainer.model = mock_trainer_model
     mock_trainer_cls.return_value = mock_trainer
-    
+
     # Test training execution
     trainer = SmoLoRA(...)
     trainer.train()
@@ -88,7 +88,7 @@ def test_mps_device_selection(mock_mps_available, mock_device):
     mock_device_obj = MagicMock()
     mock_device_obj.type = "mps"
     mock_device.return_value = mock_device_obj
-    
+
     trainer = SmoLoRA(...)
     assert trainer.device.type == "mps"
 ```
@@ -112,7 +112,7 @@ def test_model_merging(mock_peft_model_cls):
     mock_merged_model = MagicMock()
     mock_peft_model.merge_and_unload.return_value = mock_merged_model
     mock_peft_model_cls.from_pretrained.return_value = mock_peft_model
-    
+
     trainer = SmoLoRA(...)
     trainer.save()
     mock_peft_model.merge_and_unload.assert_called()
@@ -177,17 +177,17 @@ def test_memory_cleanup(mock_empty_cache):
 def test_inference_with_custom_parameters():
     # Mock model generation with parameter verification
     mock_model.generate.return_value = [[1, 2, 3, 4, 5]]
-    
+
     result = trainer.inference(
         "Test prompt",
         max_new_tokens=100,
         do_sample=False,
         temperature=0.8
     )
-    
+
     # Verify parameters passed correctly
     mock_model.generate.assert_called_with(
-        input_ids=[[1, 2, 3]], 
+        input_ids=[[1, 2, 3]],
         attention_mask=[[1, 1, 1]],
         max_new_tokens=100,
         do_sample=False,

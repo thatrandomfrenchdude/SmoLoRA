@@ -47,13 +47,13 @@ pre-commit install
 class SmoLoRA:
     """
     Main trainer class implementing the Adapter pattern for LoRA fine-tuning.
-    
+
     Design Patterns Used:
     - Adapter: Wraps transformers components
     - Builder: Configuration setup
     - Template Method: Training pipeline
     """
-    
+
     def __init__(self, ...):
         # Initialization follows builder pattern
         self._setup_device()
@@ -90,7 +90,7 @@ def _configure_lora(self):
     """Configure LoRA with model-specific parameters."""
     model_type = getattr(self.model.config, 'model_type', 'unknown')
     target_modules = self._get_target_modules(model_type)
-    
+
     self.peft_config = LoraConfig(
         r=self.lora_r,
         lora_alpha=self.lora_alpha,
@@ -104,15 +104,15 @@ def _configure_lora(self):
 ```python
 class DatasetHandler:
     """Extensible dataset handling with custom preprocessors."""
-    
+
     def __init__(self, text_field: str = "text"):
         self.text_field = text_field
         self.preprocessors = []
-    
+
     def add_preprocessor(self, func: Callable):
         """Add custom preprocessing function."""
         self.preprocessors.append(func)
-    
+
     def process_dataset(self, dataset):
         """Apply all preprocessors to dataset."""
         for preprocessor in self.preprocessors:
@@ -133,7 +133,7 @@ class LoRAConfig:
     alpha: int = 16
     dropout: float = 0.1
     target_modules: List[str] = field(default_factory=lambda: ["q_proj", "v_proj"])
-    
+
     def __post_init__(self):
         if self.r <= 0:
             raise ValueError("LoRA rank must be positive")
@@ -149,7 +149,7 @@ class TrainingConfig:
     gradient_accumulation_steps: int = 4
     learning_rate: float = 2e-4
     max_seq_length: int = 512
-    
+
     def to_sft_config(self) -> SFTConfig:
         """Convert to SFTConfig object."""
         return SFTConfig(**self.__dict__)
@@ -165,11 +165,11 @@ from typing import Optional
 
 class WeightedMSELoss(nn.Module):
     """Custom weighted MSE loss for specific use cases."""
-    
+
     def __init__(self, weights: Optional[torch.Tensor] = None):
         super().__init__()
         self.weights = weights
-    
+
     def forward(self, predictions, targets):
         loss = nn.MSELoss(reduction='none')(predictions, targets)
         if self.weights is not None:
@@ -188,15 +188,15 @@ def _setup_custom_loss(self):
 ```python
 def _optimize_memory(self):
     """Apply memory optimization techniques."""
-    
+
     # Enable gradient checkpointing
     if hasattr(self.model, 'gradient_checkpointing_enable'):
         self.model.gradient_checkpointing_enable()
-    
+
     # Use mixed precision training
     self.sft_config.fp16 = torch.cuda.is_available()
     self.sft_config.bf16 = torch.cuda.is_bf16_supported()
-    
+
     # Optimize for memory efficiency
     self.sft_config.dataloader_pin_memory = False
     self.sft_config.dataloader_num_workers = 0
@@ -207,7 +207,7 @@ def _clear_memory_cache(self):
         torch.mps.empty_cache()
     elif self.device.type == "cuda":
         torch.cuda.empty_cache()
-    
+
     # Force garbage collection
     import gc
     gc.collect()
@@ -223,23 +223,23 @@ from typing import Dict, Any
 
 class CheckpointManager:
     """Advanced checkpoint management with metadata."""
-    
+
     def __init__(self, base_dir: str):
         self.base_dir = Path(base_dir)
         self.metadata_file = self.base_dir / "checkpoint_metadata.json"
-    
-    def save_checkpoint(self, 
-                       model, 
-                       step: int, 
+
+    def save_checkpoint(self,
+                       model,
+                       step: int,
                        metrics: Dict[str, float],
                        config: Dict[str, Any]):
         """Save checkpoint with comprehensive metadata."""
         checkpoint_dir = self.base_dir / f"checkpoint-{step}"
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Save model
         model.save_pretrained(checkpoint_dir)
-        
+
         # Save metadata
         metadata = {
             "step": step,
@@ -248,9 +248,9 @@ class CheckpointManager:
             "config": config,
             "path": str(checkpoint_dir)
         }
-        
+
         self._update_metadata(metadata)
-    
+
     def _update_metadata(self, new_metadata: Dict):
         """Update checkpoint metadata file."""
         if self.metadata_file.exists():
@@ -258,9 +258,9 @@ class CheckpointManager:
                 all_metadata = json.load(f)
         else:
             all_metadata = {"checkpoints": []}
-        
+
         all_metadata["checkpoints"].append(new_metadata)
-        
+
         with open(self.metadata_file, 'w') as f:
             json.dump(all_metadata, f, indent=2)
 ```
@@ -278,19 +278,19 @@ def mock_transformer_components():
     """Reusable fixture for transformer components."""
     with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, \
          patch("smoLoRA.AutoTokenizer") as mock_tokenizer_cls:
-        
+
         # Setup model mock
         mock_model = MagicMock()
         mock_model.config.use_cache = False
         mock_model.to.return_value = mock_model
         mock_model_cls.from_pretrained.return_value = mock_model
-        
+
         # Setup tokenizer mock
         mock_tokenizer = MagicMock()
         mock_tokenizer.pad_token_id = None
         mock_tokenizer.eos_token_id = 1
         mock_tokenizer_cls.from_pretrained.return_value = mock_tokenizer
-        
+
         yield {
             "model_cls": mock_model_cls,
             "tokenizer_cls": mock_tokenizer_cls,
@@ -364,7 +364,7 @@ with profile_code("training_profile.prof"):
 ```python
 def optimize_batch_processing(self):
     """Optimize batch processing for different hardware."""
-    
+
     # Determine optimal batch size
     if self.device.type == "mps":
         # MPS has memory limitations
@@ -375,9 +375,9 @@ def optimize_batch_processing(self):
         recommended_batch_size = min(8, gpu_memory // (1024**3))  # Rough estimate
     else:
         recommended_batch_size = 1
-    
+
     self.sft_config.per_device_train_batch_size = recommended_batch_size
-    
+
     # Adjust gradient accumulation accordingly
     target_effective_batch_size = 16
     self.sft_config.gradient_accumulation_steps = (
@@ -434,14 +434,14 @@ def validate_inputs(**validators):
             sig = inspect.signature(func)
             bound_args = sig.bind(*args, **kwargs)
             bound_args.apply_defaults()
-            
+
             # Validate each argument
             for param_name, validator in validators.items():
                 if param_name in bound_args.arguments:
                     value = bound_args.arguments[param_name]
                     if not validator(value):
                         raise ValueError(f"Invalid value for {param_name}: {value}")
-            
+
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -462,33 +462,33 @@ def configure_lora(self, r: int, alpha: float, dropout: float):
 ### Docstring Standards
 
 ```python
-def train(self, 
+def train(self,
           num_epochs: int = None,
           save_steps: int = 500,
           eval_steps: int = 500) -> Dict[str, Any]:
     """
     Train the model using LoRA fine-tuning.
-    
+
     This method initiates the training process using the configured SFTTrainer
     with LoRA adapters. Training progress is automatically saved at specified
     intervals.
-    
+
     Args:
         num_epochs: Number of training epochs. If None, uses config default.
         save_steps: Number of steps between checkpoint saves.
         eval_steps: Number of steps between evaluations.
-    
+
     Returns:
         Dict containing training metrics and final model state.
-        
+
     Raises:
         TrainingError: If training fails due to configuration or resource issues.
-        
+
     Example:
         >>> trainer = SmoLoRA(model_name="gpt2", dataset_name="wikitext")
         >>> results = trainer.train(num_epochs=3, save_steps=100)
         >>> print(f"Final loss: {results['train_loss']}")
-        
+
     Note:
         Training automatically handles device placement and memory optimization.
         Checkpoints are saved to the configured output directory.
@@ -506,7 +506,7 @@ from typing import Optional
 
 class DebugConfig:
     """Configuration for debug mode."""
-    def __init__(self, 
+    def __init__(self,
                  log_level: str = "INFO",
                  profile_training: bool = False,
                  save_intermediate: bool = False):
@@ -518,13 +518,13 @@ def setup_debugging(self, debug_config: Optional[DebugConfig] = None):
     """Setup debugging configuration."""
     if debug_config is None:
         return
-    
+
     # Configure logging
     logging.basicConfig(
         level=getattr(logging, debug_config.log_level),
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     self.logger = logging.getLogger(__name__)
     self.debug_config = debug_config
 ```

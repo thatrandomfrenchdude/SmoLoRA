@@ -7,15 +7,15 @@ A lightweight, developer-friendly Python tool for fine-tuning a small language m
 ---
 
 ## Table of Contents
-[📦 Features](#-features)  
-[🔧 Requirement Setup](#-requirement-setup)  
-[📁 Configuration](#-configuration)  
-[🚀 Class Structure Overview](#-class-structure-overview)  
-[🚀 Quickstart Walkthrough](#-quickstart-walkthrough)  
-[📂 Custom Dataset with Local Text Files](#-custom-dataset-with-local-text-files)  
-[🛠️ General-Purpose Dataset Preparation](#-general-purpose-dataset-preparation)  
-[🚀 Usage Example](#-usage-example)  
-[🧠 Tips & Best Practices](#-tips--best-practices)  
+[📦 Features](#-features)
+[🔧 Requirement Setup](#-requirement-setup)
+[📁 Configuration](#-configuration)
+[🚀 Class Structure Overview](#-class-structure-overview)
+[🚀 Quickstart Walkthrough](#-quickstart-walkthrough)
+[📂 Custom Dataset with Local Text Files](#-custom-dataset-with-local-text-files)
+[🛠️ General-Purpose Dataset Preparation](#-general-purpose-dataset-preparation)
+[🚀 Usage Example](#-usage-example)
+[🧠 Tips & Best Practices](#-tips--best-practices)
 [📂 Files](#-files)
 
 ---

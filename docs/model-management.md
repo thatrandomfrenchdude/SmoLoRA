@@ -12,7 +12,7 @@ graph TD
     D --> E[Final Model]
     E --> F[Model Loading]
     F --> G[Inference]
-    
+
     H[Version Control] --> C
     H --> E
     I[Model Registry] --> F
@@ -90,17 +90,17 @@ def save(self):
     del self.model
     del self.trainer
     torch.mps.empty_cache()
-    
+
     # Load fresh base model
     base_model = AutoModelForCausalLM.from_pretrained(
         self.base_model_name,
         trust_remote_code=True
     ).to(self.device)
-    
+
     # Apply and merge adapter
     model_with_adapter = PeftModel.from_pretrained(base_model, self.adapter_checkpoint)
     merged_model = model_with_adapter.merge_and_unload()
-    
+
     # Save final package
     merged_model_path = os.path.join(self.output_dir, "final_merged")
     merged_model.save_pretrained(merged_model_path)
@@ -112,7 +112,7 @@ def save(self):
 ```
 final_merged/
 ├── config.json              # Model configuration
-├── generation_config.json   # Default generation parameters  
+├── generation_config.json   # Default generation parameters
 ├── pytorch_model.bin        # Merged model weights
 ├── pytorch_model-00001-of-00001.bin  # Sharded weights (large models)
 ├── pytorch_model.bin.index.json      # Shard index (large models)
@@ -153,16 +153,16 @@ Load base model + adapter for experimentation:
 def load_adapter_model(base_model_name: str, adapter_path: str):
     """Load base model with adapter applied."""
     from peft import PeftModel
-    
+
     # Load base model
     base_model = AutoModelForCausalLM.from_pretrained(
         base_model_name,
         trust_remote_code=True
     )
-    
+
     # Apply adapter
     model = PeftModel.from_pretrained(base_model, adapter_path)
-    
+
     return model
 ```
 
@@ -181,7 +181,7 @@ class LazyModelLoader:
         self.model_path = model_path
         self._model = None
         self._tokenizer = None
-    
+
     @property
     def model(self):
         if self._model is None:
@@ -190,8 +190,8 @@ class LazyModelLoader:
                 trust_remote_code=True
             )
         return self._model
-    
-    @property 
+
+    @property
     def tokenizer(self):
         if self._tokenizer is None:
             self._tokenizer = AutoTokenizer.from_pretrained(
@@ -206,11 +206,11 @@ class LazyModelLoader:
 ### Basic Inference
 
 ```python
-def inference(self, prompt: str, max_new_tokens: int = 200, 
+def inference(self, prompt: str, max_new_tokens: int = 200,
               do_sample: bool = True, temperature: float = 1.0) -> str:
     """Generate text with configurable parameters."""
     inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
-    
+
     with torch.no_grad():  # Disable gradients for inference
         outputs = self.model.generate(
             **inputs,
@@ -219,7 +219,7 @@ def inference(self, prompt: str, max_new_tokens: int = 200,
             temperature=temperature,
             pad_token_id=self.tokenizer.eos_token_id
         )
-    
+
     generated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
     return generated_text
 ```
@@ -233,25 +233,25 @@ def batch_inference(self, prompts: List[str], **generation_kwargs) -> List[str]:
     """Generate text for multiple prompts in batches."""
     # Tokenize all prompts
     inputs = self.tokenizer(
-        prompts, 
-        return_tensors="pt", 
-        padding=True, 
+        prompts,
+        return_tensors="pt",
+        padding=True,
         truncation=True
     ).to(self.device)
-    
+
     with torch.no_grad():
         outputs = self.model.generate(
             **inputs,
             **generation_kwargs,
             pad_token_id=self.tokenizer.eos_token_id
         )
-    
+
     # Decode all outputs
     generated_texts = [
         self.tokenizer.decode(output, skip_special_tokens=True)
         for output in outputs
     ]
-    
+
     return generated_texts
 
 # Usage
@@ -271,15 +271,15 @@ Generate text token by token for real-time applications:
 def streaming_inference(self, prompt: str, **generation_kwargs):
     """Stream generated tokens as they're produced."""
     inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
-    
+
     # Prepare for streaming
     input_length = inputs['input_ids'].shape[1]
-    
+
     with torch.no_grad():
         for i in range(generation_kwargs.get('max_new_tokens', 200)):
             outputs = self.model(**inputs)
             next_token_logits = outputs.logits[0, -1, :]
-            
+
             # Sample next token
             if generation_kwargs.get('do_sample', True):
                 next_token = torch.multinomial(
@@ -288,18 +288,18 @@ def streaming_inference(self, prompt: str, **generation_kwargs):
                 )
             else:
                 next_token = torch.argmax(next_token_logits, dim=-1, keepdim=True)
-            
+
             # Yield decoded token
             token_text = self.tokenizer.decode(next_token, skip_special_tokens=True)
             yield token_text
-            
+
             # Update inputs for next iteration
             inputs['input_ids'] = torch.cat([inputs['input_ids'], next_token.unsqueeze(0)], dim=1)
             inputs['attention_mask'] = torch.cat([
-                inputs['attention_mask'], 
+                inputs['attention_mask'],
                 torch.ones((1, 1), device=self.device)
             ], dim=1)
-            
+
             # Stop if EOS token generated
             if next_token.item() == self.tokenizer.eos_token_id:
                 break
@@ -341,7 +341,7 @@ def save_model_metadata(output_dir: str, training_config: dict):
     """Save comprehensive model metadata."""
     import json
     from datetime import datetime
-    
+
     metadata = {
         "timestamp": datetime.now().isoformat(),
         "base_model": training_config.get("base_model_name"),
@@ -364,7 +364,7 @@ def save_model_metadata(output_dir: str, training_config: dict):
             "parameters_trained": training_config.get("trainable_params")
         }
     }
-    
+
     with open(os.path.join(output_dir, "metadata.json"), "w") as f:
         json.dump(metadata, f, indent=2)
 
@@ -387,7 +387,7 @@ class ModelRegistry:
     def __init__(self, registry_path: str = "./model_registry.json"):
         self.registry_path = registry_path
         self.models = self._load_registry()
-    
+
     def _load_registry(self) -> dict:
         """Load existing registry or create new one."""
         try:
@@ -395,39 +395,39 @@ class ModelRegistry:
                 return json.load(f)
         except FileNotFoundError:
             return {}
-    
+
     def register_model(self, name: str, version: str, path: str, metadata: dict):
         """Register a new model version."""
         if name not in self.models:
             self.models[name] = {}
-        
+
         self.models[name][version] = {
             "path": path,
             "metadata": metadata,
             "registered_at": datetime.now().isoformat()
         }
-        
+
         self._save_registry()
-    
+
     def get_model_path(self, name: str, version: str = "latest") -> str:
         """Get path to specific model version."""
         if name not in self.models:
             raise ValueError(f"Model {name} not found in registry")
-        
+
         if version == "latest":
             # Get most recent version
             versions = list(self.models[name].keys())
             version = max(versions)
-        
+
         return self.models[name][version]["path"]
-    
+
     def list_models(self) -> dict:
         """List all registered models."""
         return {
-            name: list(versions.keys()) 
+            name: list(versions.keys())
             for name, versions in self.models.items()
         }
-    
+
     def _save_registry(self):
         """Save registry to disk."""
         with open(self.registry_path, "w") as f:
@@ -459,7 +459,7 @@ def optimize_memory_usage():
     # Clear unused variables
     import gc
     gc.collect()
-    
+
     # Clear GPU cache
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
@@ -486,16 +486,16 @@ def optimize_for_inference(model):
     """Apply inference optimizations."""
     # Set to evaluation mode
     model.eval()
-    
+
     # Disable dropout
     for module in model.modules():
         if hasattr(module, 'dropout'):
             module.dropout = 0.0
-    
+
     # Compile model (PyTorch 2.0+)
     if hasattr(torch, 'compile'):
         model = torch.compile(model)
-    
+
     return model
 
 # Usage
@@ -514,7 +514,7 @@ class LocalModelServer:
         self.model = None
         self.tokenizer = None
         self._load_model()
-    
+
     def _load_model(self):
         """Load model and tokenizer."""
         self.model = AutoModelForCausalLM.from_pretrained(
@@ -526,18 +526,18 @@ class LocalModelServer:
             trust_remote_code=True
         )
         self.model = optimize_for_inference(self.model)
-    
+
     def generate(self, prompt: str, **kwargs) -> str:
         """Generate text for given prompt."""
         inputs = self.tokenizer(prompt, return_tensors="pt")
-        
+
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
                 **kwargs,
                 pad_token_id=self.tokenizer.eos_token_id
             )
-        
+
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 # Usage
@@ -560,7 +560,7 @@ def generate_text():
     prompt = data.get('prompt', '')
     max_tokens = data.get('max_tokens', 100)
     temperature = data.get('temperature', 0.7)
-    
+
     try:
         result = model_server.generate(
             prompt,
@@ -568,12 +568,12 @@ def generate_text():
             temperature=temperature,
             do_sample=True
         )
-        
+
         return jsonify({
             'generated_text': result,
             'status': 'success'
         })
-    
+
     except Exception as e:
         return jsonify({
             'error': str(e),
@@ -592,24 +592,24 @@ if __name__ == '__main__':
 def debug_model_loading(model_path: str):
     """Debug common model loading issues."""
     import os
-    
+
     # Check if path exists
     if not os.path.exists(model_path):
         print(f"Error: Model path {model_path} does not exist")
         return False
-    
+
     # Check required files
     required_files = ["config.json", "pytorch_model.bin", "tokenizer_config.json"]
     missing_files = []
-    
+
     for file in required_files:
         if not os.path.exists(os.path.join(model_path, file)):
             missing_files.append(file)
-    
+
     if missing_files:
         print(f"Error: Missing required files: {missing_files}")
         return False
-    
+
     # Try loading config
     try:
         from transformers import AutoConfig
@@ -619,7 +619,7 @@ def debug_model_loading(model_path: str):
     except Exception as e:
         print(f"Error loading config: {e}")
         return False
-    
+
     print("Model path validation passed")
     return True
 
@@ -633,9 +633,9 @@ debug_model_loading("./my_model/final_merged")
 def estimate_memory_requirements(model_path: str):
     """Estimate memory requirements for model."""
     from transformers import AutoConfig
-    
+
     config = AutoConfig.from_pretrained(model_path)
-    
+
     # Estimate parameters
     if hasattr(config, 'n_parameters'):
         params = config.n_parameters
@@ -644,16 +644,16 @@ def estimate_memory_requirements(model_path: str):
         hidden_size = getattr(config, 'hidden_size', 4096)
         num_layers = getattr(config, 'num_hidden_layers', 32)
         vocab_size = getattr(config, 'vocab_size', 50000)
-        
+
         params = (hidden_size * hidden_size * 4 * num_layers) + (vocab_size * hidden_size)
-    
+
     # Memory in GB (float32)
     memory_gb = (params * 4) / (1024**3)
-    
+
     print(f"Estimated parameters: {params:,}")
     print(f"Estimated memory (float32): {memory_gb:.2f} GB")
     print(f"Estimated memory (float16): {memory_gb/2:.2f} GB")
-    
+
     return memory_gb
 
 # Usage

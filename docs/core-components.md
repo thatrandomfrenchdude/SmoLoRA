@@ -169,29 +169,29 @@ The save method is where the magic happens - merging LoRA adapters into the base
 ```python
 def save(self):
     print(f"[{datetime.now()}] Starting model merge...")
-    
+
     # Memory cleanup
     del self.model
     del self.trainer
     torch.mps.empty_cache()
-    
+
     # Fresh base model load
     base_model = AutoModelForCausalLM.from_pretrained(
         self.base_model_name,
         trust_remote_code=True
     ).to(self.device)
     base_model.config.use_cache = False
-    
+
     # Apply and merge adapter
     model_with_adapter = PeftModel.from_pretrained(base_model, self.adapter_checkpoint)
     merged_model = model_with_adapter.merge_and_unload()
-    
+
     # Save final model
     merged_model_path = os.path.join(self.output_dir, "final_merged")
     merged_model.save_pretrained(merged_model_path)
     self.tokenizer.save_pretrained(merged_model_path)
     self.merged_model_path = merged_model_path
-    
+
     print(f"[{datetime.now()}] Model merge finished.")
 ```
 
@@ -441,7 +441,7 @@ for p in prompts:
 ### Performance Tracking
 The usage example demonstrates timing different phases:
 - Initialization time
-- Training time  
+- Training time
 - Saving time
 - Loading time
 - Inference time

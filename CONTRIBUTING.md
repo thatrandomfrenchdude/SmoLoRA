@@ -176,7 +176,7 @@ mypy smoLoRA.py prepare_dataset.py local_text.py
 ### Code Style Guidelines
 
 1. **Line Length**: Maximum 88 characters (Black default)
-2. **Import Organization**: 
+2. **Import Organization**:
    - Standard library imports first
    - Third-party imports second
    - Local imports last
@@ -191,15 +191,15 @@ def prepare_dataset(
     chunk_size: int = 0
 ) -> Dataset:
     """Prepare a dataset from various file formats.
-    
+
     Args:
         source: Path to data source (folder, .jsonl, or .csv file)
         text_field: Field name containing text data
         chunk_size: Split texts into chunks of this many words
-        
+
     Returns:
         HuggingFace Dataset with standardized 'text' field
-        
+
     Raises:
         ValueError: If file type cannot be inferred or is unsupported
     """

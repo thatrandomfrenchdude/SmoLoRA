@@ -124,17 +124,17 @@ graph TD
     B -->|.jsonl| D[read_jsonl]
     B -->|.csv| E[read_csv]
     B -->|HF Dataset| F[load_dataset]
-    
+
     C --> G[Raw Text List]
     D --> G
     E --> G
     F --> H[HF Dataset Object]
-    
+
     G --> I{Chunking Enabled?}
     I -->|Yes| J[chunk_texts]
     I -->|No| K[Deduplication]
     J --> K
-    
+
     K --> L[Create Dataset Object]
     H --> M[Field Mapping]
     L --> M
@@ -149,7 +149,7 @@ The system automatically detects file types based on several criteria:
 def detect_file_type(source: str, file_type: Optional[str] = None) -> str:
     if file_type is not None:
         return file_type
-    
+
     if os.path.isdir(source):
         return "txt"
     elif source.endswith(".jsonl"):
@@ -238,7 +238,7 @@ Optional text chunking breaks long documents into smaller training examples.
 def chunk_texts(texts: List[str], chunk_size: int = 0) -> List[str]:
     if chunk_size <= 0:
         return texts
-    
+
     chunks = []
     for text in texts:
         words = text.split()
@@ -509,12 +509,12 @@ dataset = prepare_dataset("huge_file.txt", chunk_size=50)
 def validate_dataset(dataset):
     """Validate dataset quality."""
     texts = [ex['text'] for ex in dataset]
-    
+
     print(f"Total examples: {len(texts)}")
     print(f"Average length: {sum(len(t.split()) for t in texts) / len(texts):.1f} words")
     print(f"Min length: {min(len(t.split()) for t in texts)} words")
     print(f"Max length: {max(len(t.split()) for t in texts)} words")
-    
+
     # Check for duplicates
     unique_count = len(set(texts))
     print(f"Unique examples: {unique_count} ({unique_count/len(texts)*100:.1f}%)")
