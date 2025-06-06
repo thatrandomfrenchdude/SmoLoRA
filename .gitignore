@@ -3,4 +3,5 @@
 /smolora-venv/**
 /output_model/**
 **/__pycache__/**
-/pytest_cache/**
+/.pytest_cache/
+/.mypy_cache/

@@ -1,7 +1,12 @@
-from datasets import Dataset
+"""Module to load text data from a folder containing .txt files into a Hugging Face Dataset."""
+
 import os
 
-def load_text_data(data_folder):
+from datasets import Dataset
+
+
+def load_text_data(data_folder: str) -> Dataset:
+    """Load text data from a folder containing .txt files."""
     texts = []
     for file_name in os.listdir(data_folder):
         if file_name.endswith(".txt"):
