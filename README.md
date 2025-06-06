@@ -72,15 +72,13 @@ smolora/
 
 ## 🚀 Quick Start
 
-### Basic Usage
-
 ```python
 from smolora import SmoLoRA
 
 # Initialize the trainer
 trainer = SmoLoRA(
     base_model_name="microsoft/Phi-1.5",
-    dataset_name="yelp_review_full",
+    dataset_name="yelp_review_full", # HuggingFace dataset
     text_field="text",
     output_dir="./output_model"
 )
@@ -100,32 +98,11 @@ result = trainer.inference(prompt)
 print("Generated output:", result)
 ```
 
-### Using Custom Datasets
+## 📂 Custom Datasets
 
-```python
-from smolora import SmoLoRA, load_text_data, prepare_dataset
+SmoLoRA supports multiple data formats through the `smolora.dataset` module. You can use HuggingFace datasets, local text files, CSV, or JSONL files for training.
 
-# Load data from local text files
-dataset = load_text_data("./my_text_files/")
-
-# Or prepare data from various formats
-dataset = prepare_dataset(
-    source="./data/my_data.jsonl",
-    text_field="content",
-    chunk_size=50  # Optional: split into chunks
-)
-
-# Use with SmoLoRA
-trainer = SmoLoRA(
-    base_model_name="microsoft/Phi-1.5",
-    dataset_name=dataset,  # Use the prepared dataset directly
-    output_dir="./custom_model"
-)
-```
-
-## 📂 Custom Dataset Handling
-
-SmoLoRA supports multiple data formats through the `smolora.dataset` module:
+You can use the `prepare_dataset.py` tool to convert your raw text, CSV, or JSONL data into a HuggingFace `Dataset` ready for fine-tuning.
 
 ### Text Files
 ```python
@@ -133,6 +110,13 @@ from smolora.dataset import load_text_data
 
 # Load all .txt files from a directory
 dataset = load_text_data("./text_directory/")
+
+# Use with SmoLoRA
+trainer = SmoLoRA(
+    base_model_name="microsoft/Phi-1.5",
+    dataset_name=dataset,  # Use the prepared dataset directly
+    output_dir="./custom_model"
+)
 ```
 
 ### JSONL Files
@@ -145,6 +129,8 @@ dataset = prepare_dataset(
     text_field="text",  # Field containing the text data
     chunk_size=100      # Optional: words per chunk
 )
+
+# Use with SmoLoRA
 ```
 
 ### CSV Files
@@ -157,36 +143,9 @@ dataset = prepare_dataset(
     text_field="content",
     file_type="csv"  # Explicitly specify format
 )
+
+# Use with SmoLoRA
 ```
-
-If you want to fine-tune on your own text files, use the helper function from `local_text.py` to load your data:
-
-```python
-from datasets import Dataset
-from local_text import load_text_data
-
-# Load text data from a local folder (each .txt file can contain one or multiple text entries).
-dataset = load_text_data("./my_text_data")
-
-# Pass the dataset into the trainer by replacing the dataset name.
-from LoRATrainer import LoRATrainer
-
-trainer = LoRATrainer(
-    base_model_name="meta-llama/Llama-2-7b-hf",
-    dataset_name="yelp_review_full",  # placeholder: change as needed if supporting custom datasets
-    text_field="text",
-    output_dir="./custom_text_output"
-)
-
-# For custom in-memory datasets, adjust the trainer's dataset member as needed:
-trainer.dataset = dataset
-
-# Proceed with training, merging, loading, and inference as shown above.
-```
-
-## 🛠️ General-Purpose Dataset Preparation
-
-You can use the `prepare_dataset.py` tool to convert your raw text, CSV, or JSONL data into a HuggingFace `Dataset` ready for fine-tuning.
 
 ## 🛠️ Advanced Usage
 
