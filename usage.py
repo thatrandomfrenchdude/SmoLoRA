@@ -1,4 +1,4 @@
-from smoLoRA import LoRATrainer
+from smoLoRA import SmoLoRA
 from local_text import load_text_data
 from datetime import datetime
 
@@ -30,7 +30,7 @@ prompt = "Write a review about a great coffee shop."
 
 # initialize the trainer
 print("Initializing the trainer...")
-trainer = LoRATrainer(
+trainer = SmoLoRA(
     base_model_name=base_model,
     dataset_name=dataset,
     text_field="text",
