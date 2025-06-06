@@ -1,4 +1,4 @@
-from LoRATrainer import LoRATrainer
+from smoLoRA import LoRATrainer
 from local_text import load_text_data
 from datetime import datetime
 
