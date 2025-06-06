@@ -58,7 +58,7 @@ class SmoLoRA:
             optim="adamw_torch",
             fp16=False,
             bf16=False,
-            max_seq_length=1024,
+            max_length=1024,  # Updated from max_seq_length to fix deprecation warning
             dataset_text_field="text"
         )
 
