@@ -35,8 +35,13 @@ pip install -r requirements.txt
 echo "🔧 Installing development dependencies..."
 pip install -r dev-requirements.txt
 
+# install smolora package in editable mode
+echo "🔍 Installing SmoLoRA package in editable mode..."
+pip install -e .
+
 # Install pre-commit hooks
 echo "🪝 Setting up pre-commit hooks..."
+pip install pre-commit
 pre-commit install
 
 # Run initial code quality checks

@@ -33,7 +33,7 @@ pip install smolora
 ```
 
 ### Development Setup
-For developers who want to contribute or modify the code. Please review the [Contributing](CONTRIBUTING.md) section for guidelines, then follow these steps to set up your development environment:
+For developers who want to contribute or modify the code. Please review the [Contributing](CONTRIBUTING.md#) section for guidelines, then follow these steps to set up your development environment:
 ```bash
 # Clone the repository
 git clone https://github.com/username/smolora.git

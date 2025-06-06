@@ -45,7 +45,7 @@ cd SmoLoRA
 
 # Run the setup script to create a virtual environment and install dependencies
 chmod +x scripts/setup-dev.sh
-./setup-dev.sh
+./scripts/setup-dev.sh
 ```
 
 #### Manual Setup
@@ -68,7 +68,7 @@ pip install -r requirements.txt
 pip install -r dev-requirements.txt
 ```
 
-4. # Install the package in editable mode
+4. Install the package in editable mode
 ```bash
 pip install -e .  # Install the package in editable mode
 ```
