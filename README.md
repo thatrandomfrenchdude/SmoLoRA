@@ -9,7 +9,7 @@ A lightweight, developer-friendly Python package for fine-tuning small language 
 - [🔧 Installation](#-installation)
 - [📁 Project Structure](#-project-structure)
 - [🚀 Quick Start](#-quick-start)
-- [📂 Custom Dataset Handling](#-custom-dataset-handling)
+- [📂 Custom Dataset Handling](#-custom-datasets)
 - [🛠️ Advanced Usage](#-advanced-usage)
 - [🧠 Tips & Best Practices](#-tips--best-practices)
 - [🧪 Testing](#-testing)
