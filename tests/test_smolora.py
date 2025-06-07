@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 def test_load_text_data(tmp_path: Path) -> None:
     """Test loading text data from a folder."""
-    from local_text import load_text_data
+    from smolora.dataset import load_text_data
 
     # Create sample text files
     file1 = tmp_path / "a.txt"
@@ -23,7 +23,7 @@ def test_load_text_data(tmp_path: Path) -> None:
 
 def test_prepare_dataset_txt(tmp_path: Path) -> None:
     """Test preparing dataset from .txt files."""
-    from prepare_dataset import prepare_dataset
+    from smolora.dataset import prepare_dataset
 
     d = tmp_path / "txts"
     d.mkdir()
@@ -39,7 +39,7 @@ def test_prepare_dataset_txt(tmp_path: Path) -> None:
 
 def test_prepare_dataset_jsonl(tmp_path: Path) -> None:
     """Test preparing dataset from .jsonl files."""
-    from prepare_dataset import prepare_dataset
+    from smolora.dataset import prepare_dataset
 
     jsonl = tmp_path / "data.jsonl"
     jsonl.write_text('{"text": "abc"}\n{"text": "def"}\n')
@@ -52,7 +52,7 @@ def test_prepare_dataset_jsonl(tmp_path: Path) -> None:
 
 def test_prepare_dataset_csv(tmp_path: Path) -> None:
     """Test preparing dataset from .csv files."""
-    from prepare_dataset import prepare_dataset
+    from smolora.dataset import prepare_dataset
 
     csvf = tmp_path / "data.csv"
     csvf.write_text("text\nrow1\nrow2\n")
@@ -65,7 +65,7 @@ def test_prepare_dataset_csv(tmp_path: Path) -> None:
 
 def test_prepare_dataset_chunking(tmp_path: Path) -> None:
     """Test preparing dataset with chunking enabled."""
-    from prepare_dataset import prepare_dataset
+    from smolora.dataset import prepare_dataset
 
     d = tmp_path / "txts"
     d.mkdir()
@@ -80,16 +80,18 @@ def test_prepare_dataset_chunking(tmp_path: Path) -> None:
 
 def test_lora_trainer_init_and_inference() -> None:
     """Test SmoLoRA initialization and inference with mocks."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ):
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up device mock to return actual device object
         mock_device_obj = MagicMock()
@@ -148,21 +150,23 @@ def test_lora_trainer_init_and_inference() -> None:
 
 def test_lora_trainer_train_and_save(tmp_path: Path) -> None:
     """Test SmoLoRA training and saving with mocks."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.PeftModel"
+        "smolora.core.PeftModel"
     ) as mock_peft_model_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ):
         # , patch(
-        #     "smoLoRA.torch.mps.empty_cache"
+        #     "smolora.core.torch.mps.empty_cache"
         # ) as mock_empty_cache:
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up device mock to return actual device object
         mock_device_obj = MagicMock()
@@ -227,14 +231,16 @@ def test_lora_trainer_train_and_save(tmp_path: Path) -> None:
 
 def test_lora_trainer_load_model() -> None:
     """Test SmoLoRA load_model functionality with mocks."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ), patch(
         "os.path.exists", return_value=True
     ), patch(
@@ -242,7 +248,7 @@ def test_lora_trainer_load_model() -> None:
     ), patch(
         "os.path.isfile", return_value=True
     ):
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up device mock to return actual device object
         mock_device_obj = MagicMock()
@@ -291,16 +297,18 @@ def test_lora_trainer_load_model() -> None:
 
 def test_smolora_initialization_with_different_parameters() -> None:
     """Test SmoLoRA initialization with different parameter configurations."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=True
+        "smolora.core.torch.backends.mps.is_available", return_value=True
     ):
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up device mock for MPS
         mock_device_obj = MagicMock()
@@ -347,16 +355,18 @@ def test_smolora_initialization_with_different_parameters() -> None:
 
 def test_smolora_inference_with_custom_parameters() -> None:
     """Test inference method with custom generation parameters."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ):
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up mocks
         mock_device_obj = MagicMock()
@@ -413,18 +423,20 @@ def test_smolora_inference_with_custom_parameters() -> None:
 
 def test_smolora_train_creates_checkpoint_directory() -> None:
     """Test that training creates the expected checkpoint directory."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ), patch(
         "os.path.join"
     ) as mock_path_join:
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up mocks
         mock_device_obj = MagicMock()
@@ -481,16 +493,18 @@ def test_smolora_train_creates_checkpoint_directory() -> None:
 
 def test_smolora_dataset_mapping() -> None:
     """Test that dataset mapping works correctly with different text fields."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ):
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up basic mocks
         mock_device_obj = MagicMock()
@@ -542,16 +556,18 @@ def test_smolora_dataset_mapping() -> None:
 
 def test_smolora_error_handling() -> None:
     """Test error handling scenarios."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ):
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Test that the class gracefully handles initialization
         mock_device_obj = MagicMock()
@@ -595,22 +611,24 @@ def test_smolora_error_handling() -> None:
 
 def test_smolora_save_workflow() -> None:
     """Test the complete save workflow including merge operations."""
-    with patch("smoLoRA.AutoModelForCausalLM") as mock_model_cls, patch(
-        "smoLoRA.AutoTokenizer"
-    ) as mock_tokenizer_cls, patch("smoLoRA.load_dataset") as mock_load_dataset, patch(
-        "smoLoRA.SFTTrainer"
+    with patch("smolora.core.AutoModelForCausalLM") as mock_model_cls, patch(
+        "smolora.core.AutoTokenizer"
+    ) as mock_tokenizer_cls, patch(
+        "smolora.core.load_dataset"
+    ) as mock_load_dataset, patch(
+        "smolora.core.SFTTrainer"
     ) as mock_trainer_cls, patch(
-        "smoLoRA.PeftModel"
+        "smolora.core.PeftModel"
     ) as mock_peft_model_cls, patch(
-        "smoLoRA.torch.device"
+        "smolora.core.torch.device"
     ) as mock_device, patch(
-        "smoLoRA.torch.backends.mps.is_available", return_value=False
+        "smolora.core.torch.backends.mps.is_available", return_value=False
     ), patch(
-        "smoLoRA.torch.mps.empty_cache"
+        "smolora.core.torch.mps.empty_cache"
     ) as mock_empty_cache, patch(
         "os.path.join"
     ) as mock_path_join:
-        from smoLoRA import SmoLoRA
+        from smolora import SmoLoRA
 
         # Set up mocks
         mock_device_obj = MagicMock()

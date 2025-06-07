@@ -25,8 +25,8 @@ SmoLoRA uses a robust testing strategy that heavily leverages mocking to isolate
 ### Model and Tokenizer Mocking
 
 ```python
-@patch("smoLoRA.AutoModelForCausalLM")
-@patch("smoLoRA.AutoTokenizer")
+@patch("smolora.core.AutoModelForCausalLM")
+@patch("smolora.core.AutoTokenizer")
 def test_model_initialization(mock_tokenizer_cls, mock_model_cls):
     # Mock model with essential attributes
     mock_model = MagicMock()
@@ -46,7 +46,7 @@ def test_model_initialization(mock_tokenizer_cls, mock_model_cls):
 ### Dataset Mocking Pattern
 
 ```python
-@patch("smoLoRA.load_dataset")
+@patch("smolora.core.load_dataset")
 def test_dataset_loading(mock_load_dataset):
     # Mock dataset with map functionality
     mock_dataset = MagicMock()
@@ -62,7 +62,7 @@ def test_dataset_loading(mock_load_dataset):
 ### Training Pipeline Mocking
 
 ```python
-@patch("smoLoRA.SFTTrainer")
+@patch("smolora.core.SFTTrainer")
 def test_training_workflow(mock_trainer_cls):
     # Mock trainer with model attribute
     mock_trainer = MagicMock()
@@ -82,8 +82,8 @@ def test_training_workflow(mock_trainer_cls):
 ### Device Management Testing
 
 ```python
-@patch("smoLoRA.torch.device")
-@patch("smoLoRA.torch.backends.mps.is_available", return_value=True)
+@patch("smolora.core.torch.device")
+@patch("smolora.core.torch.backends.mps.is_available", return_value=True)
 def test_mps_device_selection(mock_mps_available, mock_device):
     mock_device_obj = MagicMock()
     mock_device_obj.type = "mps"
@@ -106,7 +106,7 @@ def test_file_operations(mock_exists, mock_path_join):
 ### PEFT Model Testing
 
 ```python
-@patch("smoLoRA.PeftModel")
+@patch("smolora.core.PeftModel")
 def test_model_merging(mock_peft_model_cls):
     mock_peft_model = MagicMock()
     mock_merged_model = MagicMock()
@@ -161,7 +161,7 @@ test_smolora.py
 ### Memory and Resource Management
 
 ```python
-@patch("smoLoRA.torch.mps.empty_cache")
+@patch("smolora.core.torch.mps.empty_cache")
 def test_memory_cleanup(mock_empty_cache):
     # Test memory management functionality
     trainer = SmoLoRA(...)
@@ -205,7 +205,7 @@ def test_inference_with_custom_parameters():
 ### Coverage Analysis
 ```bash
 # Run tests with coverage
-pytest --cov=smoLoRA --cov-report=html
+pytest --cov=smolora --cov-report=html
 
 # View coverage report
 open htmlcov/index.html

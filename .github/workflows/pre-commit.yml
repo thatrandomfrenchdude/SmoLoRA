@@ -9,18 +9,28 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
       - name: Install dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          python -m pip install --upgrade pip
+          # Install the package in development mode with dev dependencies
+          pip install -e .[dev]
+          # Install pre-commit
           pip install pre-commit
-          pip install -r requirements.txt
-          pip install -r dev-requirements.txt
-      - name: Run Pre-commit
+      - name: Verify installation
         run: |
-          source venv/bin/activate
-          pre-commit run --all-files
+          # Test both methods of importing
+          python -c "import sys; sys.path.insert(0, 'src'); import smolora; print('smolora package accessible via src path')"
+          python -c "from smolora import SmoLoRA; print('SmoLoRA class imported successfully')" || echo "Direct import failed, will use PYTHONPATH"
+          python -m pytest --version
+      - name: Run tests separately (more reliable than pre-commit hook)
+        run: |
+          PYTHONPATH=src python -m pytest tests/ -v
+      - name: Run Pre-commit (excluding pytest)
+        run: |
+          SKIP=pytest-check pre-commit run --all-files
+        env:
+          PYTHONPATH: src

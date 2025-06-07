@@ -33,10 +33,15 @@ pip install -r requirements.txt
 
 # Install development dependencies
 echo "🔧 Installing development dependencies..."
-pip install pytest pytest-cov black flake8 isort mypy pre-commit
+pip install -r dev-requirements.txt
+
+# install smolora package in editable mode
+echo "🔍 Installing SmoLoRA package in editable mode..."
+pip install -e .
 
 # Install pre-commit hooks
 echo "🪝 Setting up pre-commit hooks..."
+pip install pre-commit
 pre-commit install
 
 # Run initial code quality checks
@@ -58,19 +63,19 @@ flake8 . || {
 }
 
 echo "  - Running mypy type checker..."
-mypy smoLoRA.py || {
+mypy src/ || {
     echo "  ⚠️  Type checking issues found. Check output above."
 }
 
 # Run tests
 echo "🧪 Running tests..."
-pytest test_smolora.py -v || {
+pytest tests/ -v || {
     echo "  ⚠️  Some tests failed. Check output above."
 }
 
 # Generate test coverage report
 echo "📊 Generating test coverage report..."
-pytest --cov=smoLoRA --cov-report=html test_smolora.py
+pytest --cov=src --cov-report=html tests/
 
 echo ""
 echo "🎉 Development environment setup complete!"
@@ -85,8 +90,8 @@ echo "Development commands:"
 echo "- Format code: black ."
 echo "- Sort imports: isort ."
 echo "- Lint code: flake8 ."
-echo "- Type check: mypy smoLoRA.py"
-echo "- Run tests: pytest test_smolora.py -v"
+echo "- Type check: mypy src/"
+echo "- Run tests: pytest tests/ -v"
 echo "- Run pre-commit: pre-commit run --all-files"
 echo ""
 echo "Happy coding! 🐍✨"

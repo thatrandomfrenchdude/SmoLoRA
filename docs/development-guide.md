@@ -144,11 +144,12 @@ class LoRAConfig:
 class TrainingConfig:
     """Training configuration with defaults."""
     output_dir: str = "./checkpoints"
-    num_train_epochs: int = 3
-    per_device_train_batch_size: int = 4
-    gradient_accumulation_steps: int = 4
+    max_steps: int = 500
+    per_device_train_batch_size: int = 1
+    gradient_accumulation_steps: int = 8
     learning_rate: float = 2e-4
-    max_seq_length: int = 512
+    max_length: int = 1024
+    logging_steps: int = 10
 
     def to_sft_config(self) -> SFTConfig:
         """Convert to SFTConfig object."""

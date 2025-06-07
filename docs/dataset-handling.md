@@ -27,12 +27,12 @@ This is the fourth example (empty line ignored).
 
 **Usage Examples**:
 ```python
-# Using local_text.py (simple)
-from local_text import load_text_data
+# Using load_text_data (simple)
+from smolora import load_text_data
 dataset = load_text_data("./my_text_files/")
 
-# Using prepare_dataset.py (advanced)
-from prepare_dataset import prepare_dataset
+# Using prepare_dataset (advanced)
+from smolora import prepare_dataset
 dataset = prepare_dataset("./my_text_files/")
 ```
 

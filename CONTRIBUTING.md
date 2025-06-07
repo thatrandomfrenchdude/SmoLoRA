@@ -20,20 +20,19 @@ By participating in this project, you are expected to uphold our code of conduct
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork locally
-3. Create a new branch for your feature or bug fix
-4. Make your changes
-5. Add tests for your changes
-6. Run the test suite to ensure everything passes
-7. Add relevant documentation for your changes
-8. Ensure your code adheres to the style guidelines
-9. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following the coding standards
+4. Run tests and ensure they pass
+5. Add relevant documentation for your changes
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
 ## Development Setup
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.13 or higher
 - Virtual environment tool (venv, conda, etc.)
 
 ### Installation
@@ -45,8 +44,8 @@ git clone https://github.com/thatrandomfrenchdude/SmoLoRA.git
 cd SmoLoRA
 
 # Run the setup script to create a virtual environment and install dependencies
-chmod +x setup-dev.sh
-./setup-dev.sh
+chmod +x scripts/setup-dev.sh
+./scripts/setup-dev.sh
 ```
 
 #### Manual Setup
@@ -66,11 +65,18 @@ pip install -r requirements.txt
 
 3. Install development dependencies:
 ```bash
-# For testing
-pip install pytest pytest-cov
+pip install -r dev-requirements.txt
+```
 
-# For linting and formatting
-pip install black flake8 isort mypy
+4. Install the package in editable mode
+```bash
+pip install -e .  # Install the package in editable mode
+```
+
+5. Install and set up pre-commit hooks:
+```bash
+pip install pre-commit
+pre-commit install  # Set up pre-commit hooks
 ```
 
 ## Testing Requirements

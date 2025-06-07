@@ -2,9 +2,10 @@
 
 import os
 from datetime import datetime
+from typing import Tuple, Union
 
 import torch
-from datasets import load_dataset
+from datasets import Dataset, load_dataset
 from peft import LoraConfig, PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl import SFTConfig, SFTTrainer
@@ -16,11 +17,18 @@ class SmoLoRA:
     def __init__(
         self,
         base_model_name: str,
-        dataset_name: str,
+        dataset_name: Union[str, Dataset],
         text_field: str = "text",
         output_dir: str = "./fine_tuned_model",
     ):
-        """Initialize the SmoLoRA class with model and dataset parameters."""
+        """Initialize the SmoLoRA class with model and dataset parameters.
+
+        Args:
+            base_model_name: Name or identifier of the base model
+            dataset_name: HuggingFace dataset identifier or Dataset object
+            text_field: The field in the dataset that contains the text
+            output_dir: Directory where the adapter checkpoint and merged model will be saved
+        """
         self.base_model_name = base_model_name
         self.dataset_name = dataset_name
         self.text_field = text_field
@@ -56,7 +64,11 @@ class SmoLoRA:
         self.tokenizer.padding_side = "right"
 
         # Load and preprocess dataset
-        self.dataset = load_dataset(self.dataset_name, split="train")
+        if isinstance(dataset_name, Dataset):
+            self.dataset = dataset_name
+        else:
+            self.dataset = load_dataset(self.dataset_name, split="train")
+
         self.dataset = self.dataset.map(lambda ex: {"text": ex[self.text_field]})
 
         # Prepare SFT configuration
@@ -70,7 +82,7 @@ class SmoLoRA:
             optim="adamw_torch",
             fp16=False,
             bf16=False,
-            max_length=1024,  # Updated from max_seq_length to fix deprecation warning
+            max_length=1024,
             dataset_text_field="text",
         )
 
@@ -98,19 +110,7 @@ class SmoLoRA:
         del self.trainer
 
         # Clear device cache to avoid memory issues
-        if self.device.type == "mps":
-            torch.mps.empty_cache()
-        elif self.device.type == "cuda":
-            torch.cuda.empty_cache()
-        else:
-            # For CPU or other devices, we still call a cache clearing method
-            # to maintain consistent behavior, even though CPU doesn't need it
-            try:
-                if hasattr(torch, "mps") and hasattr(torch.mps, "empty_cache"):
-                    torch.mps.empty_cache()
-            except (AttributeError, RuntimeError):
-                # Silently continue if MPS is not available or cache clearing fails
-                pass
+        self._clear_cache()
 
         base_model = AutoModelForCausalLM.from_pretrained(
             self.base_model_name, trust_remote_code=True
@@ -128,8 +128,15 @@ class SmoLoRA:
         self.merged_model_path = merged_model_path
         print(f"[{datetime.now()}] Model merge finished.")
 
-    def load_model(self, model_path: str) -> tuple:
-        """Load the fine-tuned model and tokenizer."""
+    def load_model(self, model_path: str) -> Tuple[AutoModelForCausalLM, AutoTokenizer]:
+        """Load the fine-tuned model and tokenizer.
+
+        Args:
+            model_path: Path to the saved model
+
+        Returns:
+            Tuple of (model, tokenizer)
+        """
         print(f"[{datetime.now()}] Loading model from {model_path}...")
         self.model = AutoModelForCausalLM.from_pretrained(
             model_path, trust_remote_code=True
@@ -147,7 +154,17 @@ class SmoLoRA:
         do_sample: bool = True,
         temperature: float = 1.0,
     ) -> str:
-        """Run inference on the fine-tuned model."""
+        """Run inference on the fine-tuned model.
+
+        Args:
+            prompt: Input text prompt
+            max_new_tokens: Maximum number of new tokens to generate
+            do_sample: Whether to use sampling for generation
+            temperature: Sampling temperature
+
+        Returns:
+            Generated text
+        """
         print(f"[{datetime.now()}] Starting inference...")
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
         outputs = self.model.generate(
@@ -161,3 +178,19 @@ class SmoLoRA:
         )
         print(f"[{datetime.now()}] Inference finished.")
         return generated_text
+
+    def _clear_cache(self) -> None:
+        """Clear device cache to avoid memory issues."""
+        if self.device.type == "mps":
+            torch.mps.empty_cache()
+        elif self.device.type == "cuda":
+            torch.cuda.empty_cache()
+        else:
+            # For CPU or other devices, we still call a cache clearing method
+            # to maintain consistent behavior, even though CPU doesn't need it
+            try:
+                if hasattr(torch, "mps") and hasattr(torch.mps, "empty_cache"):
+                    torch.mps.empty_cache()
+            except (AttributeError, RuntimeError):
+                # Silently continue if MPS is not available or cache clearing fails
+                pass
