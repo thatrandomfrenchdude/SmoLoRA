@@ -5,15 +5,15 @@
 A lightweight, developer-friendly Python package for fine-tuning small language models using LoRA adapters and running on-device inference. Built for flexibility and rapid prototyping, SmoLoRA allows you to train, save, load, and generate text from language models with a clean, modular architecture.
 
 ## Table of Contents
-- [📦 Features](#📦-features)
-- [🔧 Installation](#🔧-installation)
-- [📁 Project Structure](#📁-project-structure)
-- [🚀 Quick Start](#🚀-quick-start)
-- [📂 Custom Dataset Handling](#📂-custom-dataset-handling)
-- [🛠️ Advanced Usage](#🛠️-advanced-usage)
-- [🧠 Tips & Best Practices](#🧠-tips--best-practices)
-- [🧪 Testing](#🧪-testing)
-- [📚 Documentation](#📚-documentation)
+- [📦 Features](#-features)
+- [🔧 Installation](#-installation)
+- [📁 Project Structure](#-project-structure)
+- [🚀 Quick Start](#-quick-start)
+- [📂 Custom Dataset Handling](#-custom-dataset-handling)
+- [🛠️ Advanced Usage](#-advanced-usage)
+- [🧠 Tips & Best Practices](#-tips--best-practices)
+- [🧪 Testing](#-testing)
+- [📚 Documentation](#-documentation)
 
 ## 📦 Features
 
@@ -77,10 +77,10 @@ from smolora import SmoLoRA
 
 # Initialize the trainer
 trainer = SmoLoRA(
-    base_model_name="microsoft/Phi-1.5",
+    base_model_name="microsoft/Phi-1.5", # or any HuggingFace model
     dataset_name="yelp_review_full", # HuggingFace dataset
-    text_field="text",
-    output_dir="./output_model"
+    text_field="text", # Field containing text data
+    output_dir="./output_model" # Directory to save the fine-tuned model
 )
 
 # Fine-tune the model
