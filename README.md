@@ -77,10 +77,10 @@ from smolora import SmoLoRA
 
 # Initialize the trainer
 trainer = SmoLoRA(
-    base_model_name="microsoft/Phi-1.5",
+    base_model_name="microsoft/Phi-1.5", # or any HuggingFace model
     dataset_name="yelp_review_full", # HuggingFace dataset
-    text_field="text",
-    output_dir="./output_model"
+    text_field="text", # Field containing text data
+    output_dir="./output_model" # Directory to save the fine-tuned model
 )
 
 # Fine-tune the model
