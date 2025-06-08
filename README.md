@@ -5,25 +5,13 @@
 A lightweight, developer-friendly Python package for fine-tuning small language models using LoRA adapters and running on-device inference. Built for flexibility and rapid prototyping, SmoLoRA allows you to train, save, load, and generate text from language models with a clean, modular architecture.
 
 ## Table of Contents
-- [📦 Features](#-features)
 - [🔧 Installation](#-installation)
-- [📁 Project Structure](#-project-structure)
 - [🚀 Quick Start](#-quick-start)
-- [📂 Custom Dataset Handling](#-custom-datasets)
-- [🛠️ Advanced Usage](#-advanced-usage)
-- [🧠 Tips & Best Practices](#-tips--best-practices)
+- [📂 Custom Datasets](#-custom-datasets)
+- [🛠️ Knobs and Levers](#️-knobs-and-levers)
 - [🧪 Testing](#-testing)
+- [📁 Project Structure](#-project-structure)
 - [📚 Documentation](#-documentation)
-
-## 📦 Features
-
-- **Easy Installation**: Simple pip install with all dependencies managed
-- **Modular Architecture**: Clean separation between core functionality and utilities
-- **Multiple Data Sources**: Support for HuggingFace datasets, local text files, CSV, and JSONL
-- **LoRA Fine-tuning**: Efficient fine-tuning using PEFT LoRA adapters
-- **Model Management**: Save, load, and merge adapters with base models
-- **Comprehensive Testing**: Full test suite with mocking for reliable development
-- **Developer Tools**: Pre-commit hooks, formatting, and linting included
 
 ## 🔧 Installation
 
@@ -45,30 +33,6 @@ chmod +x scripts/setup-dev.sh
 ```
 
 This will create a virtual environment, install all dependencies, and set up pre-commit hooks.
-
-## 📁 Project Structure
-
-```
-smolora/
-├── src/smolora/           # Main package source
-│   ├── __init__.py        # Package initialization
-│   ├── core.py            # Main SmoLoRA class
-│   └── dataset.py         # Dataset handling utilities
-├── examples/              # Usage examples
-│   └── usage.py           # Basic usage example
-├── tests/                 # Test suite
-│   └── test_smolora.py    # Comprehensive tests
-├── scripts/               # Development scripts
-│   └── setup-dev.sh       # Development environment setup
-├── docs/                  # Documentation
-│   ├── api-reference.md   # API documentation
-│   ├── architecture.md    # Architecture overview
-│   └── ...               # Additional documentation
-├── pyproject.toml         # Project configuration
-├── requirements.txt       # Production dependencies
-├── dev-requirements.txt   # Development dependencies
-└── README.md             # This file
-```
 
 ## 🚀 Quick Start
 
@@ -147,9 +111,9 @@ dataset = prepare_dataset(
 # Use with SmoLoRA
 ```
 
-## 🛠️ Advanced Usage
+## 🛠️ Knobs and Levers
 
-### Configuration Options
+### SmoLoRA Configuration
 
 The `SmoLoRA` class accepts several parameters for customization:
 
@@ -173,27 +137,6 @@ trainer.peft_config.lora_alpha = 32     # Alpha scaling
 trainer.peft_config.lora_dropout = 0.1  # Dropout
 ```
 
-### Training Configuration
-
-Customize training parameters through the trainer's configuration:
-
-```python
-# Access training configuration
-training_config = trainer.training_args
-training_config.num_train_epochs = 3
-training_config.per_device_train_batch_size = 2
-training_config.learning_rate = 2e-4
-```
-
-## 🧠 Tips & Best Practices
-
-- **Start Small**: Begin with smaller models like Phi-1.5 for faster iteration
-- **Memory Management**: Use gradient checkpointing for larger models
-- **Data Quality**: Clean and consistent training data leads to better results
-- **Evaluation**: Monitor training loss and validate on held-out data
-- **Chunking**: Use appropriate chunk sizes for your specific use case
-- **Device Selection**: The toolkit automatically uses MPS on Apple Silicon Macs
-
 ## 🧪 Testing
 
 Run the comprehensive test suite:
@@ -215,6 +158,30 @@ The test suite includes:
 - Dataset loading and preparation tests
 - Mock-based training pipeline tests
 - Integration tests with sample data
+
+## 📁 Project Structure
+
+```
+smolora/
+├── src/smolora/           # Main package source
+│   ├── __init__.py        # Package initialization
+│   ├── core.py            # Main SmoLoRA class
+│   └── dataset.py         # Dataset handling utilities
+├── examples/              # Usage examples
+│   └── usage.py           # Basic usage example
+├── tests/                 # Test suite
+│   └── test_smolora.py    # Comprehensive tests
+├── scripts/               # Development scripts
+│   └── setup-dev.sh       # Development environment setup
+├── docs/                  # Documentation
+│   ├── api-reference.md   # API documentation
+│   ├── architecture.md    # Architecture overview
+│   └── ...               # Additional documentation
+├── pyproject.toml         # Project configuration
+├── requirements.txt       # Production dependencies
+├── dev-requirements.txt   # Development dependencies
+└── README.md             # This file
+```
 
 ## 📚 Documentation
 
