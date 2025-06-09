@@ -6,6 +6,9 @@
 .DS_Store
 /htmlcov/
 .coverage
+data/
+harry_potter_model/
+nick_testing.py
 
 # Build and distribution
 build/

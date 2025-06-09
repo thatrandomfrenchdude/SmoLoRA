@@ -5,8 +5,8 @@ Thank you for your interest in contributing to SmoLoRA! This document outlines t
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
 - [Development Setup](#development-setup)
+- [Getting Started with Contributions](#getting-started-with-contributions)
 - [Testing Requirements](#testing-requirements)
 - [Code Style and Linting](#code-style-and-linting)
 - [Contribution Workflow](#contribution-workflow)
@@ -16,17 +16,6 @@ Thank you for your interest in contributing to SmoLoRA! This document outlines t
 ## Code of Conduct
 
 By participating in this project, you are expected to uphold our code of conduct. Please be respectful and constructive in all interactions.
-
-## Getting Started
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes following the coding standards
-4. Run tests and ensure they pass
-5. Add relevant documentation for your changes
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
 
 ## Development Setup
 
@@ -78,6 +67,17 @@ pip install -e .  # Install the package in editable mode
 pip install pre-commit
 pre-commit install  # Set up pre-commit hooks
 ```
+
+## Getting Started with Contributions
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following the coding standards
+4. Run tests and ensure they pass
+5. Add relevant documentation for your changes
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
 ## Testing Requirements
 
@@ -176,7 +176,7 @@ flake8 .
 ### Type Checking with mypy
 ```bash
 # Run type checking
-mypy smoLoRA.py prepare_dataset.py local_text.py
+mypy src/smolora/core.py src/smolora/dataset.py
 ```
 
 ### Code Style Guidelines
