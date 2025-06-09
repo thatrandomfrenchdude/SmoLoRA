@@ -538,7 +538,7 @@ git push origin feature/new-feature
 # ... create pull request ...
 ```
 
-### Release Process
+<!-- ### Release Process
 
 ```bash
 # Version bump and release
@@ -547,7 +547,7 @@ bump2version patch  # or minor, major
 git push origin main --tags
 python setup.py sdist bdist_wheel
 twine upload dist/*
-```
+``` -->
 
 ### Documentation Standards
 
