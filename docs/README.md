@@ -1,43 +1,32 @@
 # SmoLoRA Documentation
 
-This directory contains comprehensive technical documentation for the SmoLoRA (Smooth LoRA) fine-tuning toolkit.
-
-## Documentation Structure
-
-- **[API Reference](api-reference.md)** - Complete API documentation for all classes and functions
-- **[Architecture Overview](architecture.md)** - High-level system design and component interactions
-- **[Core Components](core-components.md)** - Detailed explanation of main classes and modules
-- **[Dataset Handling](dataset-handling.md)** - Data loading, preprocessing, and preparation utilities
-- **[Training Pipeline](training-pipeline.md)** - Deep dive into the LoRA training process
-- **[Model Management](model-management.md)** - Model loading, saving, and inference workflows
-- **[Testing Strategy](testing-strategy.md)** - Testing approach and mock patterns used
-- **[Development Guide](development-guide.md)** - Developer-focused implementation details
+This directory contains streamlined documentation for the SmoLoRA fine-tuning toolkit.
 
 ## Quick Navigation
 
-### For Users
-- Start with [API Reference](api-reference.md) for basic usage
-- See [Dataset Handling](dataset-handling.md) for data preparation
-- Check [Model Management](model-management.md) for inference
+### Just Getting Started?
+- Start with the [User Guide](user-guide.md) for immediate results
+- Follow the 4-line quick start example
+- Learn about supported data formats and model options
 
-### For Contributors
-- Review [Architecture Overview](architecture.md) first
-- Study [Core Components](core-components.md) for implementation details
-- Read [Testing Strategy](testing-strategy.md) for test patterns
-- Follow [Development Guide](development-guide.md) for advanced topics
+### Want to Customize?
+- Check the [Customization Guide](customization-guide.md) for advanced configuration
+- Learn about LoRA parameters, training strategies, and custom data processing
+- Explore integration patterns with existing ML pipelines
 
-## Code Examples
+### Ready to Contribute?
+- Read the [Developer Guide](developer-guide.md) for architecture details
+- Understand the testing strategy and contribution guidelines
+- Learn about implementing new features and extending the framework
 
-All documentation includes working code examples that demonstrate:
-- Proper usage patterns
-- Error handling
-- Best practices
-- Common pitfalls and solutions
+### Archived Documentation
+
+Comprehensive technical documentation is available in the [archive](archive/) directory for reference. These documents are not maintained. They are leftover from the intial implementation phase to provide context.
 
 ## Maintenance
 
 This documentation is maintained alongside the codebase. When contributing:
-1. Update relevant documentation for any API changes
-2. Add examples for new features
-3. Document any breaking changes
-4. Keep code examples current and tested
+1. Update the appropriate level guide for any changes
+2. Add examples for new features in relevant guides
+3. Keep the User Guide simple and the Developer Guide comprehensive
+4. Archive detailed technical docs that don't fit the level structure
