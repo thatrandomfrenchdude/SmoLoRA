@@ -186,15 +186,9 @@ smolora/
 ## 📚 Documentation
 
 Comprehensive documentation is available in the `docs/` directory:
-
-- **[API Reference](docs/api-reference.md)**: Complete API documentation
-- **[Architecture](docs/architecture.md)**: System design and components
-- **[Core Components](docs/core-components.md)**: Detailed explanation of main classes and modules
-- **[Dataset Handling](docs/dataset-handling.md)**: Data preparation guide
-- **[Model Management](docs/model-management.md)**: Model loading, saving, and inference workflows
-- **[Testing Strategy](docs/testing-strategy.md)**: Testing approach and mock patterns
-- **[Training Pipeline](docs/training-pipeline.md)**: Deep dive into the LoRA training process
-- **[Development Guide](docs/development-guide.md)**: Contributing guidelines
+- [User Guide](docs/user-guide.md): Quick start and basic usage
+- [Customization Guide](docs/customization-guide.md): Advanced configuration options
+- [Developer Guide](docs/developer-guide.md): Architecture and contribution guidelines
 
 ## 📄 License
 
