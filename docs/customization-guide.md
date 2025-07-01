@@ -1,8 +1,15 @@
 # SmoLoRA Customization Guide
 
-**Level 2: Customizing and Extending SmoLoRA**
-
 This guide is for users who want to modify SmoLoRA's behavior, customize training parameters, implement custom data processing, and extend functionality while using the existing framework.
+
+***Table of Contents***
+- [Advanced Configuration](#advanced-configuration)
+- [Custom Data Processing](#custom-data-processing)
+- [Model Architecture Customization](#model-architecture-customization)
+- [Advanced Inference Patterns](#advanced-inference-patterns)
+- [Monitoring and Evaluation](#monitoring-and-evaluation)
+- [Integration Patterns](#integration-patterns)
+- [Best Practices for Customization](#best-practices-for-customization)
 
 ## Advanced Configuration
 
@@ -382,5 +389,3 @@ predictions = model.predict(["test prompt 1", "test prompt 2"])
 - Implement automated evaluation metrics
 - Compare against baseline models
 - Test edge cases and failure modes
-
-This customization guide provides the tools to adapt SmoLoRA to your specific needs while maintaining the simplicity and reliability of the core framework.

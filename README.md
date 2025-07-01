@@ -16,6 +16,7 @@ A lightweight, developer-friendly Python package for fine-tuning small language 
 ## 🔧 Installation
 
 ### Quick Install
+NOTE: This path is not yet supported, please use the development setup for now.
 ```bash
 pip install smolora
 ```

@@ -15,13 +15,12 @@ This directory contains streamlined documentation for the SmoLoRA fine-tuning to
 - Explore integration patterns with existing ML pipelines
 
 ### Ready to Contribute?
-- Read the [Developer Guide](developer-guide.md) for architecture details
-- Understand the testing strategy and contribution guidelines
+- Read the [Developer Notes](developer-notes.md) for architecture details
 - Learn about implementing new features and extending the framework
 
 ### Archived Documentation
 
-Comprehensive technical documentation is available in the [archive](archive/) directory for reference. These documents are not maintained. They are leftover from the intial implementation phase to provide context.
+Comprehensive technical documentation that was AI generated based on the codebase is available in the [archive](archive/) directory for reference. These documents are not maintained. They are leftover from the intial implementation phase to provide context.
 
 ## Maintenance
 
