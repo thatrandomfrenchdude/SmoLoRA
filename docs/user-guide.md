@@ -1,8 +1,17 @@
 # SmoLoRA User Guide
 
-**Level 1: Getting Started with SmoLoRA**
-
 SmoLoRA is a simple toolkit for fine-tuning language models using LoRA (Low-Rank Adaptation). This guide covers everything you need to know to start using it immediately.
+
+***Table of Contents***
+- [Quick Start](#quick-start)
+- [Core Concepts](#core-concepts)
+- [Common Use Cases](#common-use-cases)
+- [Working with Different Data](#working-with-different-data)
+- [Model Options](#model-options)
+- [Configuration Options](#configuration-options)
+- [Loading Saved Models](#loading-saved-models)
+- [Tips for Success](#tips-for-success)
+- [Troubleshooting](#troubleshooting)
 
 ## Quick Start
 
@@ -202,5 +211,3 @@ response = trainer.inference("Your prompt")
 - Start with working examples
 - Use smaller datasets for debugging
 - Verify your data format matches examples
-
-This guide covers everything needed to successfully use SmoLoRA. Once you're comfortable with these basics, you can explore the customization guide for more advanced features.
